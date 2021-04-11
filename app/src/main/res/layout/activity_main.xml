@@ -25,6 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:background="@drawable/my_button_primary"
+        android:onClick="goToCreateAccount"
         android:text="@string/create_an_account"
         android:textColor="@color/white"
         android:textSize="18sp"
@@ -35,10 +36,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageViewLogo" />
 
-    <TextView
+    <android.widget.Button
         android:id="@+id/textViewLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/my_button_transparent"
+        android:padding="8dp"
         android:text="@string/already_have_an_account"
         android:textColor="@color/primary"
         android:textSize="18sp"
@@ -53,6 +56,7 @@
         android:id="@+id/textViewInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="showInfo"
         android:text="@string/info"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"

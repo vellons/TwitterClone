@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Talks</string>
+    <string name="app_info_message">APP DEMO. Versione 0.1.debug</string>
     <string name="create_an_account">Crea un account</string>
     <string name="already_have_an_account">Hai già un account? Accedi</string>
     <string name="info">Info</string>
+    <string name="create_your_account">Crea il tuo account</string>
+    <string name="username">Username</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="create_account">Crea l\'account</string>
+    <string name="invalid_email">Email non valida</string>
+    <string name="invalid_password">Password non valida. Almeno 8 caratteri</string>
+    <string name="invalid_username">Username non valido. Almeno 4 caratteri in a–z 0–9</string>
+    <string name="invalid_username_already_used">Username non valido. Già usato</string>
 </resources>

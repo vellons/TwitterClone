@@ -1,6 +1,16 @@
 <resources>
     <string name="app_name">Talks</string>
+    <string name="app_info_message">DEMO APP. Version 0.1.debug</string>
     <string name="create_an_account">Create an account</string>
     <string name="already_have_an_account">Already have an account? Login</string>
     <string name="info">Info</string>
+    <string name="create_your_account">Create your account</string>
+    <string name="username">Username</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="create_account">Create account</string>
+    <string name="invalid_email">Invalid email</string>
+    <string name="invalid_password">Invalid password. At least 8 characters</string>
+    <string name="invalid_username">Invalid username. At least 4 characters in a–z 0–9</string>
+    <string name="invalid_username_already_used">Invalid username. Already used</string>
 </resources>
