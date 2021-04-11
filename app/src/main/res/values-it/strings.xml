@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Talks</string>
+    <string name="create_an_account">Crea un account</string>
+    <string name="already_have_an_account">Hai già un account? Accedi</string>
+    <string name="info">Info</string>
+</resources>
