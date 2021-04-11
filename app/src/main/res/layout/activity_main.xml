@@ -24,7 +24,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:background="@drawable/my_button"
+        android:background="@drawable/my_button_primary"
         android:text="@string/create_an_account"
         android:textColor="@color/white"
         android:textSize="18sp"
