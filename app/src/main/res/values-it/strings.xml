@@ -14,4 +14,8 @@
     <string name="invalid_password">Password non valida. Almeno 8 caratteri</string>
     <string name="invalid_username">Username non valido. Almeno 4 caratteri in a–z 0–9</string>
     <string name="invalid_username_already_used">Username non valido. Già usato</string>
+    <string name="title_home">Home</string>
+    <string name="title_messages">Messaggi</string>
+    <string name="title_notifications">Notifiche</string>
+    <string name="title_search">Ricerca</string>
 </resources>
