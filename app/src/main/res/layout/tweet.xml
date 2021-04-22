@@ -30,16 +30,6 @@
         app:layout_constraintStart_toEndOf="@+id/cardViewProfile"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:text="..."
-        android:textSize="15sp"
-        app:layout_constraintStart_toEndOf="@+id/cardViewProfile"
-        app:layout_constraintTop_toBottomOf="@+id/textViewName" />
-
     <ImageView
         android:id="@+id/imageViewVerifiedBadge"
         android:layout_width="16dp"
@@ -86,6 +76,40 @@
         app:layout_constraintStart_toEndOf="@+id/textViewDot"
         app:layout_constraintTop_toTopOf="@+id/textViewDot" />
 
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:text="..."
+        android:textSize="15sp"
+        app:layout_constraintStart_toEndOf="@+id/cardViewProfile"
+        app:layout_constraintTop_toBottomOf="@+id/textViewName" />
+
+    <TextView
+        android:id="@+id/textViewSource"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Source:"
+        android:textSize="15sp"
+        android:textStyle="italic"
+        app:layout_constraintStart_toStartOf="@+id/textViewName"
+        app:layout_constraintTop_toBottomOf="@+id/text" />
+
+    <TextView
+        android:id="@+id/textViewSourceLink"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:text="https://www.example.com"
+        android:textColor="?colorAccent"
+        android:textSize="15sp"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toBottomOf="@+id/textViewSource"
+        app:layout_constraintStart_toEndOf="@+id/textViewSource"
+        app:layout_constraintTop_toTopOf="@+id/textViewSource" />
+
     <ImageView
         android:id="@+id/imageViewPost"
         android:layout_width="0dp"
@@ -94,7 +118,83 @@
         android:padding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/cardViewProfile"
-        app:layout_constraintTop_toBottomOf="@+id/text"
+        app:layout_constraintTop_toBottomOf="@+id/textViewSource"
         app:srcCompat="@mipmap/ic_launcher_foreground" />
+
+    <ImageButton
+        android:id="@+id/imageButtonComment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:background="@drawable/my_button_transparent"
+        android:contentDescription="Comment"
+        android:padding="10dp"
+        android:tooltipText="Comment"
+        app:layout_constraintEnd_toStartOf="@+id/imageButtonRetweet"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewPost"
+        app:srcCompat="@drawable/ic_comment_outline_24" />
+
+
+    <TextView
+        android:id="@+id/textViewCommentCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="0"
+        android:textSize="17sp"
+        app:layout_constraintStart_toEndOf="@+id/imageButtonComment"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewPost" />
+
+    <ImageButton
+        android:id="@+id/imageButtonRetweet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:background="@drawable/my_button_transparent"
+        android:contentDescription="Retweet"
+        android:padding="10dp"
+        android:tooltipText="Retweet"
+        app:layout_constraintEnd_toStartOf="@+id/imageButtonLike"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/imageButtonComment"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewPost"
+        app:srcCompat="@drawable/ic_retweet" />
+
+    <TextView
+        android:id="@+id/textViewRetweetCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="0"
+        android:textSize="17sp"
+        app:layout_constraintStart_toEndOf="@+id/imageButtonRetweet"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewPost" />
+
+    <ImageButton
+        android:id="@+id/imageButtonLike"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:background="@drawable/my_button_transparent"
+        android:contentDescription="Like"
+        android:padding="10dp"
+        android:tooltipText="Like"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/imageButtonRetweet"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewPost"
+        app:srcCompat="@drawable/ic_like_outline_24" />
+
+    <TextView
+        android:id="@+id/textViewLikeCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="0"
+        android:textSize="17sp"
+        app:layout_constraintStart_toEndOf="@+id/imageButtonLike"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewPost" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
