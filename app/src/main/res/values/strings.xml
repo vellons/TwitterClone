@@ -1,6 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Talks</string>
-    <string name="app_info_message">DEMO APP. Version 0.1.debug</string>
+    <string name="app_info_message">DEMO APP. Version 1.0 (debug)</string>
     <string name="create_an_account">Create an account</string>
     <string name="already_have_an_account">Already have an account? Login</string>
     <string name="info">Info</string>
@@ -17,4 +18,13 @@
     <string name="title_messages">Messages</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_search">Search</string>
+    <string name="name">Name</string>
+    <string name="verified_badge">Verified badge user</string>
+    <string name="dot">·</string>
+    <string name="lbl_source">Source:</string>
+    <string name="photo">Photo</string>
+    <string name="comment">Comment</string>
+    <string name="retweet">Retweet</string>
+    <string name="like">Like</string>
+    <string name="tweet">Tweet</string>
 </resources>
