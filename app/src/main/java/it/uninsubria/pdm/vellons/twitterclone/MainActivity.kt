@@ -19,6 +19,11 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    fun goToLogin(v: View) {
+        val intent = Intent(this@MainActivity, Navigator::class.java)
+        startActivity(intent)
+    }
+
     fun showInfo(v: View) {
         val toast = Toast.makeText(
             applicationContext,

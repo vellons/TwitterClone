@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/linearLayout"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    tools:context=".tweet.TweetFragment">
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/cardViewProfile"
+        android:id="@+id/imageViewProfile"
         android:layout_width="75dp"
         android:layout_height="75dp"
         android:adjustViewBounds="true"
@@ -27,7 +28,7 @@
         android:text="@string/name"
         android:textSize="17sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/cardViewProfile"
+        app:layout_constraintStart_toEndOf="@+id/imageViewProfile"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
@@ -84,7 +85,7 @@
         android:layout_marginTop="4dp"
         android:text="..."
         android:textSize="15sp"
-        app:layout_constraintStart_toEndOf="@+id/cardViewProfile"
+        app:layout_constraintStart_toEndOf="@+id/imageViewProfile"
         app:layout_constraintTop_toBottomOf="@+id/textViewName" />
 
     <TextView
@@ -117,7 +118,7 @@
         android:contentDescription="@string/photo"
         android:padding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/cardViewProfile"
+        app:layout_constraintStart_toEndOf="@+id/imageViewProfile"
         app:layout_constraintTop_toBottomOf="@+id/textViewSource"
         app:srcCompat="@mipmap/ic_launcher_foreground" />
 
