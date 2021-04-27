@@ -18,12 +18,6 @@
         tools:layout="@layout/fragment_search" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="it.uninsubria.pdm.vellons.twitterclone.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
-
-    <fragment
         android:id="@+id/navigation_account"
         android:name="it.uninsubria.pdm.vellons.twitterclone.ui.account.AccountFragment"
         android:label="@string/title_account"
