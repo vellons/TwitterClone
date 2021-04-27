@@ -1,7 +1,7 @@
 package it.uninsubria.pdm.vellons.twitterclone.tweet
 
-import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -11,13 +11,17 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.imageview.ShapeableImageView
 import it.uninsubria.pdm.vellons.twitterclone.R
+import it.uninsubria.pdm.vellons.twitterclone.UserDetailActivity
+import it.uninsubria.pdm.vellons.twitterclone.user.User
 
 class TweetAdapter(private val tweetList: List<Tweet>, private val context: Context?) :
-// Useful: https://www.youtube.com/watch?v=6Gm3eMG8KqI
     RecyclerView.Adapter<TweetAdapter.TweetViewHolder>() {
 
     class TweetViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        // Useful: https://www.youtube.com/watch?v=6Gm3eMG8KqI
+        // Elements in Tweet.xml
         val name: TextView = itemView.findViewById(R.id.textViewName)
         val username: TextView = itemView.findViewById(R.id.textViewUsername)
         val verifiedBadge: ImageView = itemView.findViewById(R.id.imageViewVerifiedBadge)
@@ -31,13 +35,14 @@ class TweetAdapter(private val tweetList: List<Tweet>, private val context: Cont
         val commentImage: ImageButton = itemView.findViewById(R.id.imageButtonComment)
         val retweetImage: ImageButton = itemView.findViewById(R.id.imageButtonRetweet)
         val likeImage: ImageButton = itemView.findViewById(R.id.imageButtonLike)
+        val userImage: ShapeableImageView = itemView.findViewById(R.id.imageViewUserImage)
     }
 
-    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: TweetViewHolder, position: Int) {
+        // Binding xml with tweet object from list by position
         val currentItem = tweetList[position]
         holder.name.text = currentItem.user.name
-        holder.username.text = "@" + currentItem.user.username
+        holder.username.text = ("@" + currentItem.user.username)
         holder.verifiedBadge.visibility =
             if (currentItem.user.userVerified) View.VISIBLE else View.GONE
         holder.date.text = currentItem.displayDate
@@ -64,11 +69,11 @@ class TweetAdapter(private val tweetList: List<Tweet>, private val context: Cont
         holder.commentImage.setOnClickListener {
             displayNotYetImplemented()
         }
-
         holder.retweetImage.setOnClickListener {
             displayNotYetImplemented()
         }
 
+        // Like/Remove like
         holder.likeImage.setOnClickListener {
             if (!currentItem.hasUserLike) {
                 currentItem.hasUserLike = true
@@ -81,6 +86,20 @@ class TweetAdapter(private val tweetList: List<Tweet>, private val context: Cont
                 holder.likeImage.setImageResource(R.drawable.ic_like_outline_24)
                 holder.likeImage.clearColorFilter()
             }
+        }
+
+        // User detail activity
+        holder.userImage.setOnClickListener {
+            openUserDetailsActivity(currentItem.user)
+        }
+        holder.name.setOnClickListener {
+            openUserDetailsActivity(currentItem.user)
+        }
+        holder.verifiedBadge.setOnClickListener {
+            openUserDetailsActivity(currentItem.user)
+        }
+        holder.username.setOnClickListener {
+            openUserDetailsActivity(currentItem.user)
         }
     }
 
@@ -102,5 +121,14 @@ class TweetAdapter(private val tweetList: List<Tweet>, private val context: Cont
         )
         toast.setGravity(Gravity.TOP, 0, 75)
         toast.show()
+    }
+
+    private fun openUserDetailsActivity(user: User) {
+        val intent = Intent(context, UserDetailActivity::class.java)
+        intent.putExtra("id", user.id)
+        intent.putExtra("name", user.name)
+        intent.putExtra("username", user.username)
+        intent.putExtra("userVerified", user.userVerified)
+        context?.startActivity(intent)
     }
 }
