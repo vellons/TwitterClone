@@ -1,16 +1,19 @@
 package it.uninsubria.pdm.vellons.twitterclone.tweet
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import it.uninsubria.pdm.vellons.twitterclone.R
 
-class TweetAdapter(private val tweetList: List<Tweet>) :
+class TweetAdapter(private val tweetList: List<Tweet>, private val context: Context?) :
 // Useful: https://www.youtube.com/watch?v=6Gm3eMG8KqI
     RecyclerView.Adapter<TweetAdapter.TweetViewHolder>() {
 
@@ -25,6 +28,8 @@ class TweetAdapter(private val tweetList: List<Tweet>) :
         val commentCount: TextView = itemView.findViewById(R.id.textViewCommentCount)
         val retweetCount: TextView = itemView.findViewById(R.id.textViewRetweetCount)
         val likeCount: TextView = itemView.findViewById(R.id.textViewLikeCount)
+        val commentImage: ImageButton = itemView.findViewById(R.id.imageButtonComment)
+        val retweetImage: ImageButton = itemView.findViewById(R.id.imageButtonRetweet)
         val likeImage: ImageButton = itemView.findViewById(R.id.imageButtonLike)
     }
 
@@ -54,6 +59,15 @@ class TweetAdapter(private val tweetList: List<Tweet>) :
             holder.likeImage.setImageResource(R.drawable.ic_like_outline_24)
             holder.likeImage.clearColorFilter()
         }
+
+        holder.commentImage.setOnClickListener {
+            displayNotYetImplemented()
+        }
+
+        holder.retweetImage.setOnClickListener {
+            displayNotYetImplemented()
+        }
+
         holder.likeImage.setOnClickListener {
             if (!currentItem.hasUserLike) {
                 currentItem.hasUserLike = true
@@ -77,5 +91,15 @@ class TweetAdapter(private val tweetList: List<Tweet>) :
 
     override fun getItemCount(): Int {
         return tweetList.size
+    }
+
+    private fun displayNotYetImplemented() {
+        val toast = Toast.makeText(
+            context,
+            context?.getString(R.string.not_implemented_yet),
+            Toast.LENGTH_SHORT
+        )
+        toast.setGravity(Gravity.TOP, 0, 75)
+        toast.show()
     }
 }

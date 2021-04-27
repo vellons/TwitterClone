@@ -25,7 +25,7 @@ class HomeFragment : Fragment() {
         homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_home, container, false)
         val recyclerView: RecyclerView = root.findViewById(R.id.recycler_view_home_tweet)
-        recyclerView.adapter = TweetAdapter(tweetList)
+        recyclerView.adapter = TweetAdapter(tweetList, context)
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.setHasFixedSize(true)
         return root
