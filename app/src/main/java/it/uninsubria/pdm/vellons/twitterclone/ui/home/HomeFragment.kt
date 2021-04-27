@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import it.uninsubria.pdm.vellons.twitterclone.R
@@ -28,6 +29,12 @@ class HomeFragment : Fragment() {
         val recyclerView: RecyclerView = root.findViewById(R.id.recycler_view_home_tweet)
         recyclerView.adapter = TweetAdapter(tweetList, context)
         recyclerView.layoutManager = LinearLayoutManager(activity)
+        recyclerView.addItemDecoration(
+            DividerItemDecoration(
+                context,
+                DividerItemDecoration.VERTICAL
+            )
+        )
         recyclerView.setHasFixedSize(true)
         return root
     }
