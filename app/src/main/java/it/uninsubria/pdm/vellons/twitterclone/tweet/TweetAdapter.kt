@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import it.uninsubria.pdm.vellons.twitterclone.R
@@ -14,12 +15,20 @@ class TweetAdapter(private val tweetList: List<Tweet>) :
     RecyclerView.Adapter<TweetAdapter.TweetViewHolder>() {
 
     class TweetViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val name: TextView = itemView.findViewById<TextView>(R.id.textViewName)
-        val username: TextView = itemView.findViewById<TextView>(R.id.textViewUsername)
-        val text: TextView = itemView.findViewById<TextView>(R.id.text)
+        val name: TextView = itemView.findViewById(R.id.textViewName)
+        val username: TextView = itemView.findViewById(R.id.textViewUsername)
+        val verifiedBadge: ImageView = itemView.findViewById(R.id.imageViewVerifiedBadge)
+        val date: TextView = itemView.findViewById(R.id.textViewTime)
+        val text: TextView = itemView.findViewById(R.id.text)
+        val sourceLbl: TextView = itemView.findViewById(R.id.textViewSource)
+        val source: TextView = itemView.findViewById(R.id.textViewSourceLink)
+        val commentCount: TextView = itemView.findViewById(R.id.textViewCommentCount)
+        val retweetCount: TextView = itemView.findViewById(R.id.textViewRetweetCount)
+        val likeCount: TextView = itemView.findViewById(R.id.textViewLikeCount)
+        val likeImage: ImageButton = itemView.findViewById(R.id.imageButtonLike)
 
         init {
-            itemView.findViewById<ImageButton>(R.id.imageButtonLike).setOnClickListener {
+            likeImage.setOnClickListener {
                 val imageButtonLike: ImageButton = itemView.findViewById(R.id.imageButtonLike)
                 imageButtonLike.setImageResource(R.drawable.ic_like_full_24)
             }
@@ -31,7 +40,26 @@ class TweetAdapter(private val tweetList: List<Tweet>) :
         val currentItem = tweetList[position]
         holder.name.text = currentItem.name
         holder.username.text = "@" + currentItem.username
+        holder.verifiedBadge.visibility = if (currentItem.userVerified) View.VISIBLE else View.GONE
+        holder.date.text = currentItem.displayDate
         holder.text.text = currentItem.text
+        holder.source.text = currentItem.source
+        if (currentItem.source !== "") {
+            holder.source.visibility = View.VISIBLE
+            holder.sourceLbl.visibility = View.VISIBLE
+        } else {
+            holder.source.visibility = View.GONE
+            holder.sourceLbl.visibility = View.GONE
+        }
+        holder.commentCount.text = currentItem.commentCount.toString()
+        holder.retweetCount.text = currentItem.retweetCount.toString()
+        holder.likeCount.text = currentItem.likeCount.toString()
+        if (currentItem.hasUserLike) {
+            holder.likeImage.setImageResource(R.drawable.ic_like_full_24)
+            holder.likeImage.isActivated = true
+        } else {
+            holder.likeImage.setImageResource(R.drawable.ic_like_outline_24)
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TweetViewHolder {
