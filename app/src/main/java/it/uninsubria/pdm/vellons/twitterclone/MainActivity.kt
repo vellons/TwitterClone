@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun goToLogin(v: View) {
-        val intent = Intent(this@MainActivity, Navigator::class.java)
+        val intent = Intent(this@MainActivity, NavigatorActivity::class.java)
         startActivity(intent)
     }
 
