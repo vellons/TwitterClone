@@ -8,4 +8,5 @@
     <color name="over_black">#3C3C3C</color>
     <color name="white">#FFFFFFFF</color>
     <color name="over_white">#E1E8ED</color>
+    <color name="like_color">#FF0000</color>
 </resources>

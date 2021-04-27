@@ -37,7 +37,7 @@
         android:layout_marginStart="0dp"
         android:layout_marginEnd="0dp"
         android:background="?android:attr/windowBackground"
-        app:itemIconTint="@color/my_bottom_icon_color"
+        app:itemIconTint="@color/my_bottom_nav_icon_color"
         app:itemRippleColor="@color/primary"
         app:labelVisibilityMode="unlabeled"
         app:layout_constraintBottom_toBottomOf="parent"
