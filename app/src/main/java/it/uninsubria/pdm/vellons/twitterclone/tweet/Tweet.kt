@@ -9,8 +9,8 @@ data class Tweet(
     val displayDate: String,
     val text: String = "",
     val source: String = "",
-    val commentCount: Number = 0,
-    val retweetCount: Number = 0,
-    val likeCount: Number = 0,
-    val hasUserLike: Boolean = false,
+    var commentCount: Number = 0,
+    var retweetCount: Number = 0,
+    var likeCount: Number = 0,
+    var hasUserLike: Boolean = false,
 )

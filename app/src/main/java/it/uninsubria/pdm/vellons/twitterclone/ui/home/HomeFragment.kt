@@ -21,7 +21,7 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val tweetList = generateSampleList(50)
+        val tweetList = generateSampleList(150)
         homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_home, container, false)
         val recyclerView: RecyclerView = root.findViewById(R.id.recycler_view_home_tweet)
@@ -42,8 +42,8 @@ class HomeFragment : Fragment() {
                 userVerified = i % 5 == 0,
                 displayDate = (i + 1).toString() + " hour ago",
                 text = "Tweet $i. Ciao!",
-                source = if (i % 4 == 0) "http://example$i.com" else "",
-                commentCount = 100 - i,
+                source = if (i % 4 == 0) "https://example.com/$i" else "",
+                commentCount = size - i,
                 retweetCount = 20 + i,
                 likeCount = if (i % 3 == 0) i + 3 else 0,
                 hasUserLike = i % 6 == 0

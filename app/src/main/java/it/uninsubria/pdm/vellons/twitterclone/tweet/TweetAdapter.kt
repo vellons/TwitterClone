@@ -26,13 +26,6 @@ class TweetAdapter(private val tweetList: List<Tweet>) :
         val retweetCount: TextView = itemView.findViewById(R.id.textViewRetweetCount)
         val likeCount: TextView = itemView.findViewById(R.id.textViewLikeCount)
         val likeImage: ImageButton = itemView.findViewById(R.id.imageButtonLike)
-
-        init {
-            likeImage.setOnClickListener {
-                val imageButtonLike: ImageButton = itemView.findViewById(R.id.imageButtonLike)
-                imageButtonLike.setImageResource(R.drawable.ic_like_full_24)
-            }
-        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -56,9 +49,23 @@ class TweetAdapter(private val tweetList: List<Tweet>) :
         holder.likeCount.text = currentItem.likeCount.toString()
         if (currentItem.hasUserLike) {
             holder.likeImage.setImageResource(R.drawable.ic_like_full_24)
-            holder.likeImage.isActivated = true
+            holder.likeImage.setColorFilter(R.color.like_color)
         } else {
             holder.likeImage.setImageResource(R.drawable.ic_like_outline_24)
+            holder.likeImage.clearColorFilter()
+        }
+        holder.likeImage.setOnClickListener {
+            if (!currentItem.hasUserLike) {
+                currentItem.hasUserLike = true
+                holder.likeCount.text = ((holder.likeCount.text as String).toInt() + 1).toString()
+                holder.likeImage.setImageResource(R.drawable.ic_like_full_24)
+                holder.likeImage.setColorFilter(R.color.like_color)
+            } else {
+                currentItem.hasUserLike = false
+                holder.likeCount.text = ((holder.likeCount.text as String).toInt() - 1).toString()
+                holder.likeImage.setImageResource(R.drawable.ic_like_outline_24)
+                holder.likeImage.clearColorFilter()
+            }
         }
     }
 
