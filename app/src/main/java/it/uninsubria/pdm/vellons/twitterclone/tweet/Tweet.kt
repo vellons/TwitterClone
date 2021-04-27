@@ -1,11 +1,11 @@
 package it.uninsubria.pdm.vellons.twitterclone.tweet
 
+import it.uninsubria.pdm.vellons.twitterclone.user.User
+
 data class Tweet(
     val position: Number,
     val id: String,
-    val name: String,
-    val username: String,
-    val userVerified: Boolean = false,
+    val user: User,
     val displayDate: String,
     val text: String = "",
     val source: String = "",

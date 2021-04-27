@@ -5,7 +5,7 @@
     android:layout_height="wrap_content">
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/imageViewProfile"
+        android:id="@+id/imageViewUserImage"
         android:layout_width="75dp"
         android:layout_height="75dp"
         android:adjustViewBounds="true"
@@ -14,9 +14,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/circleImageView"
-        app:srcCompat="@mipmap/ic_default_user_photo">
-
-    </com.google.android.material.imageview.ShapeableImageView>
+        app:srcCompat="@mipmap/ic_default_user_photo" />
 
     <TextView
         android:id="@+id/textViewName"
@@ -26,7 +24,7 @@
         android:text="@string/name"
         android:textSize="17sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/imageViewProfile"
+        app:layout_constraintStart_toEndOf="@+id/imageViewUserImage"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
@@ -83,7 +81,7 @@
         android:layout_marginTop="4dp"
         android:text="..."
         android:textSize="15sp"
-        app:layout_constraintStart_toEndOf="@+id/imageViewProfile"
+        app:layout_constraintStart_toEndOf="@+id/imageViewUserImage"
         app:layout_constraintTop_toBottomOf="@+id/textViewName" />
 
     <TextView
@@ -116,7 +114,7 @@
         android:contentDescription="@string/photo"
         android:padding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageViewProfile"
+        app:layout_constraintStart_toEndOf="@+id/imageViewUserImage"
         app:layout_constraintTop_toBottomOf="@+id/textViewSource"
         app:srcCompat="@mipmap/ic_launcher_foreground" />
 

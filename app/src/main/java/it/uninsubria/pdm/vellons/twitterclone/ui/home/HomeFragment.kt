@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import it.uninsubria.pdm.vellons.twitterclone.R
 import it.uninsubria.pdm.vellons.twitterclone.tweet.Tweet
 import it.uninsubria.pdm.vellons.twitterclone.tweet.TweetAdapter
+import it.uninsubria.pdm.vellons.twitterclone.user.User
 
 class HomeFragment : Fragment() {
 
@@ -34,12 +35,16 @@ class HomeFragment : Fragment() {
     private fun generateSampleList(size: Int): List<Tweet> {
         val list = ArrayList<Tweet>()
         for (i in 0 until size) {
-            val item = Tweet(
-                position = i,
-                id = i.toString(),
+            val user = User(
+                id = "$i",
                 name = "Name $i",
                 username = "user$i",
                 userVerified = i % 5 == 0,
+            )
+            val item = Tweet(
+                position = i,
+                id = i.toString(),
+                user = user,
                 displayDate = (i + 1).toString() + " hour ago",
                 text = "Tweet $i. Ciao!",
                 source = if (i % 4 == 0) "https://example.com/$i" else "",

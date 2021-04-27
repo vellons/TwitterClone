@@ -36,9 +36,10 @@ class TweetAdapter(private val tweetList: List<Tweet>, private val context: Cont
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: TweetViewHolder, position: Int) {
         val currentItem = tweetList[position]
-        holder.name.text = currentItem.name
-        holder.username.text = "@" + currentItem.username
-        holder.verifiedBadge.visibility = if (currentItem.userVerified) View.VISIBLE else View.GONE
+        holder.name.text = currentItem.user.name
+        holder.username.text = "@" + currentItem.user.username
+        holder.verifiedBadge.visibility =
+            if (currentItem.user.userVerified) View.VISIBLE else View.GONE
         holder.date.text = currentItem.displayDate
         holder.text.text = currentItem.text
         holder.source.text = currentItem.source
