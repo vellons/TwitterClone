@@ -17,7 +17,7 @@
         android:title="@string/title_notifications" />
 
     <item
-        android:id="@+id/navigation_messages"
-        android:icon="@drawable/ic_messages_outline_24"
-        android:title="@string/title_messages" />
+        android:id="@+id/navigation_account"
+        android:icon="@drawable/ic_person_outline_24"
+        android:title="@string/title_account" />
 </menu>

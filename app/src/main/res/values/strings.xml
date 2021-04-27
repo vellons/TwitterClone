@@ -15,9 +15,9 @@
     <string name="invalid_username">Invalid username. At least 4 characters in a–z 0–9</string>
     <string name="invalid_username_already_used">Invalid username. Already used</string>
     <string name="title_home">Home</string>
-    <string name="title_messages">Messages</string>
-    <string name="title_notifications">Notifications</string>
     <string name="title_search">Search</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_account">Account</string>
     <string name="name">Name</string>
     <string name="verified_badge">Verified badge user</string>
     <string name="dot">·</string>

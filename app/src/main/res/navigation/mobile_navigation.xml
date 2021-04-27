@@ -24,8 +24,8 @@
         tools:layout="@layout/fragment_notifications" />
 
     <fragment
-        android:id="@+id/navigation_messages"
-        android:name="it.uninsubria.pdm.vellons.twitterclone.ui.messages.MessagesFragment"
-        android:label="@string/title_messages"
+        android:id="@+id/navigation_account"
+        android:name="it.uninsubria.pdm.vellons.twitterclone.ui.account.AccountFragment"
+        android:label="@string/title_account"
         tools:layout="@layout/fragment_notifications" />
 </navigation>
