@@ -18,14 +18,19 @@ class CreateAccountActivity : AppCompatActivity() {
     }
 
     fun validateInputsAndContinue(v: View) {
+        val editTextName = findViewById<EditText>(R.id.editTextName)
         val editTextUsername = findViewById<EditText>(R.id.editTextUsername)
         val editTextEmail = findViewById<EditText>(R.id.editTextEmail)
         val editTextPassword1 = findViewById<EditText>(R.id.editTextPassword1)
 
+        val name: String = editTextName.text.toString()
         val user: String = editTextUsername.text.toString()
         val email: String = editTextEmail.text.toString()
         val pass: String = editTextPassword1.text.toString()
 
+        if (!isValidName(name)) {
+            editTextName.error = getString(R.string.invalid_name)
+        }
         if (!isValidEmail(email)) {
             editTextEmail.error = getString(R.string.invalid_email)
         }
@@ -38,6 +43,10 @@ class CreateAccountActivity : AppCompatActivity() {
         if (isValidUsername(user) && !isFreeUsername(user)) {
             editTextUsername.error = getString(R.string.invalid_username_already_used)
         }
+    }
+
+    private fun isValidName(str: String?): Boolean {
+        return str != null && str.length >= 4
     }
 
     private fun isValidEmail(email: String?): Boolean {

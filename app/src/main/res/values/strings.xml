@@ -10,6 +10,7 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="create_account">Create account</string>
+    <string name="invalid_name">Invalid name. At least 4 characters</string>
     <string name="invalid_email">Invalid email</string>
     <string name="invalid_password">Invalid password. At least 8 characters</string>
     <string name="invalid_username">Invalid username. At least 4 characters in a–z 0–9</string>
@@ -28,4 +29,12 @@
     <string name="like">Like</string>
     <string name="tweet">Tweet</string>
     <string name="not_implemented_yet">Not implemented yet</string>
+    <string name="your_account">Your account</string>
+    <string name="insert_small_bio">Insert a small profile biography here</string>
+    <string name="edit_account">Edit account</string>
+    <string name="add_photo">Add photo</string>
+    <string name="logout">Logout</string>
+    <string name="save_account">Save account</string>
+    <string name="edit_your_account">Edit your account</string>
+    <string name="edit_account_completed">Account info changed</string>
 </resources>
