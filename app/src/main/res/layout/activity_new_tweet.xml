@@ -25,6 +25,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:background="@drawable/my_button_primary"
+        android:hint="@string/tweet"
         android:padding="4dp"
         android:text="@string/tweet"
         android:textColor="@color/white"
@@ -52,7 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="92dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="24dp"
         android:autofillHints="text"
         android:background="@null"
         android:ems="10"
@@ -64,5 +65,47 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageViewProfileUserImage"
         app:layout_constraintTop_toTopOf="@+id/imageViewProfileUserImage" />
+
+    <ImageButton
+        android:id="@+id/imageButtonTakePicture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/my_button_transparent"
+        android:contentDescription="@string/comment"
+        android:padding="10dp"
+        android:tooltipText="Take a picture now"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/ic_add_a_photo_24" />
+
+    <ImageButton
+        android:id="@+id/imageButtonTakePhotoFromGallery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/my_button_transparent"
+        android:contentDescription="@string/comment"
+        android:padding="10dp"
+        android:tooltipText="Take photo from gallery"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageButtonTakePicture"
+        app:srcCompat="@drawable/ic_add_gallery_photo_24" />
+
+    <ImageButton
+        android:id="@+id/imageButtonAddSourceUrl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/my_button_transparent"
+        android:contentDescription="@string/comment"
+        android:padding="10dp"
+        android:tooltipText="Add a source for this tweet"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageButtonTakePhotoFromGallery"
+        app:srcCompat="@drawable/ic_open_in_new_24" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
