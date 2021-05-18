@@ -24,6 +24,7 @@
         android:layout_margin="15dp"
         android:background="@color/primary"
         android:contentDescription="@string/tweet"
+        android:onClick="goToNewTweet"
         android:tooltipText="@string/tweet"
         app:layout_constraintBottom_toTopOf="@+id/nav_view"
         app:layout_constraintEnd_toEndOf="parent"

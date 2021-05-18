@@ -102,6 +102,11 @@ class AccountFragment : Fragment() {
             displayToast(R.string.not_implemented_yet)
         }
 
+        buttonLogout.setOnLongClickListener {
+            displayToast(R.string.app_info_message)
+            return@setOnLongClickListener true
+        }
+
         return root
     }
 
