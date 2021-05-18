@@ -66,6 +66,7 @@
         app:layout_constraintStart_toEndOf="@+id/imageViewProfileUserImage"
         app:layout_constraintTop_toTopOf="@+id/imageViewProfileUserImage" />
 
+
     <ImageButton
         android:id="@+id/imageButtonTakePicture"
         android:layout_width="wrap_content"
@@ -74,8 +75,9 @@
         android:layout_marginBottom="16dp"
         android:background="@drawable/my_button_transparent"
         android:contentDescription="@string/comment"
+        android:onClick="takePicture"
         android:padding="10dp"
-        android:tooltipText="Take a picture now"
+        android:tooltipText="@string/take_picture"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/ic_add_a_photo_24" />
@@ -88,8 +90,9 @@
         android:layout_marginBottom="16dp"
         android:background="@drawable/my_button_transparent"
         android:contentDescription="@string/comment"
+        android:onClick="openGallery"
         android:padding="10dp"
-        android:tooltipText="Take photo from gallery"
+        android:tooltipText="@string/take_photo_from_gallery"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageButtonTakePicture"
         app:srcCompat="@drawable/ic_add_gallery_photo_24" />
@@ -103,7 +106,7 @@
         android:background="@drawable/my_button_transparent"
         android:contentDescription="@string/comment"
         android:padding="10dp"
-        android:tooltipText="Add a source for this tweet"
+        android:tooltipText="@string/add_source_for_this_tweet"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageButtonTakePhotoFromGallery"
         app:srcCompat="@drawable/ic_open_in_new_24" />

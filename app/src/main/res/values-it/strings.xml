@@ -38,4 +38,8 @@
     <string name="edit_your_account">Modifica il tuo account</string>
     <string name="edit_account_completed">Informazioni account modificate</string>
     <string name="what_s_new">Cosa c\'è di nuovo?</string>
+    <string name="take_picture">Scatta una foto ora</string>
+    <string name="take_photo_from_gallery">Scegli una foto dalla galleria</string>
+    <string name="add_source_for_this_tweet">Aggiungi una fonte per questo tweet</string>
+    <string name="fail_to_open_camera">Non è stato possibili aprire la camera</string>
 </resources>
