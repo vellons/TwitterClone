@@ -1,5 +1,6 @@
 package it.uninsubria.pdm.vellons.twitterclone.ui.account
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -11,6 +12,7 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Source
 import com.google.firebase.firestore.ktx.firestore
@@ -26,6 +28,7 @@ class AccountFragment : Fragment() {
     private lateinit var firestore: FirebaseFirestore
     private var isUserVerified: Boolean = false
 
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -53,6 +56,7 @@ class AccountFragment : Fragment() {
         // Get FirebaseAuth user instance
         val currentUser = auth.currentUser
         val uid = currentUser?.uid
+        val firestoreSource = Source.SERVER // Avoid using Firestore cache
         if (currentUser == null || uid == null) {
             Log.d(TAG, "User not logged")
             // Redirect MainPage
@@ -60,10 +64,9 @@ class AccountFragment : Fragment() {
             startActivity(intent)
             activity?.finish()
         } else {
-            val source = Source.SERVER // Avoid using Firestore cache
             // Get current users info from DB
             val userRef = firestore.collection("users").document(uid)
-            userRef.get(source).addOnSuccessListener { document ->
+            userRef.get(firestoreSource).addOnSuccessListener { document ->
                 Log.d(TAG, "Current user uid: $uid Data: " + document.data)
                 if (document != null) {
                     textViewProfileName.text = document.getString("name")
@@ -116,36 +119,85 @@ class AccountFragment : Fragment() {
                     errors += 1
                     editTextProfileUsername.error = getString(R.string.invalid_username)
                 }
-                if (isValidUsername(user) && !isFreeUsername(user)) {
-                    errors += 1
-                    editTextProfileUsername.error =
-                        getString(R.string.invalid_username_already_used)
-                }
+
                 if (errors == 0) { // Check if errors are displayed in EditText
                     user = user.toLowerCase(Locale.ROOT)
+                    // Check if user update profile info
                     if (name != textViewProfileName.text || ("@$user") != textViewProfileUsername.text || textViewProfileBio.text != bio) {
-                        // Check if user update profile info
-                        displayToast(R.string.edit_account_completed)
-                        textViewProfileName.text = name
-                        textViewProfileUsername.text = ("@$user")
-                        textViewProfileBio.text = bio
-                        // Call Firebase here!
+
+                        // Check if username is not used by others
+                        firestore.collection("users")
+                            .whereEqualTo("username", user)
+                            .get(firestoreSource)
+                            .addOnSuccessListener { result ->
+                                for (document in result) {
+                                    Log.d(TAG, "Username: ${document.id} => ${document.data}")
+                                    if (document.getString("username") == user && document.id != uid) { // Username already used
+                                        editTextProfileUsername.error =
+                                            getString(R.string.invalid_username_already_used)
+                                        return@addOnSuccessListener
+                                    }
+                                }
+
+                                // Update new user info to Firebase
+                                if (currentUser != null && uid != null) {
+                                    // Get current users info from DB
+                                    val userRef = firestore.collection("users").document(uid)
+                                    // Update user infos
+                                    userRef.update("name", name)
+                                    userRef.update("username", user)
+                                    userRef.update("bio", bio)
+                                    userRef.update("updatedAt", FieldValue.serverTimestamp())
+                                        .addOnSuccessListener {
+                                            displayToast(R.string.edit_account_completed)
+                                            Log.d(TAG, "User successfully updated!")
+
+                                            // Show new data in text view
+                                            textViewProfileName.text = name
+                                            textViewProfileUsername.text = ("@$user")
+                                            textViewProfileBio.text = bio
+
+                                            // Restore normal mode
+                                            textViewTitle.text = getString(R.string.your_account)
+                                            editTextProfileName.visibility = View.GONE
+                                            editTextProfileUsername.visibility = View.GONE
+                                            editTextProfileBio.visibility = View.GONE
+                                            textViewProfileName.visibility = View.VISIBLE
+                                            textViewProfileUsername.visibility = View.VISIBLE
+                                            textViewProfileBio.visibility = View.VISIBLE
+                                            buttonEditAccount.text = getString(R.string.edit_account)
+                                            if (isUserVerified) {
+                                                imageViewBadge.visibility = View.VISIBLE // Only if verified user
+                                            }
+                                        }
+                                        .addOnFailureListener { exception ->
+                                            displayToast(R.string.check_internet_connection)
+                                            Log.w(TAG, "Error updating user to DB", exception)
+                                        }
+                                }
+                            }
+                            .addOnFailureListener { exception ->
+                                displayToast(R.string.check_internet_connection)
+                                Log.w(TAG, "Error checking username", exception)
+                            }
+
+                    } else {
+                        // Restore normal mode
+                        textViewTitle.text = getString(R.string.your_account)
+                        editTextProfileName.visibility = View.GONE
+                        editTextProfileUsername.visibility = View.GONE
+                        editTextProfileBio.visibility = View.GONE
+                        textViewProfileName.visibility = View.VISIBLE
+                        textViewProfileUsername.visibility = View.VISIBLE
+                        textViewProfileBio.visibility = View.VISIBLE
+                        buttonEditAccount.text = getString(R.string.edit_account)
+                        if (isUserVerified) {
+                            imageViewBadge.visibility = View.VISIBLE // Only if verified user
+                        }
                     }
-                    // Restore normal mode
-                    textViewTitle.text = getString(R.string.your_account)
-                    editTextProfileName.visibility = View.GONE
-                    editTextProfileUsername.visibility = View.GONE
-                    editTextProfileBio.visibility = View.GONE
-                    textViewProfileName.visibility = View.VISIBLE
-                    textViewProfileUsername.visibility = View.VISIBLE
-                    textViewProfileBio.visibility = View.VISIBLE
-                    buttonEditAccount.text = getString(R.string.edit_account)
-                    if (isUserVerified) {
-                        imageViewBadge.visibility = View.VISIBLE // Only if verified user
-                    }
-                }
+                } // end errors == 0
             }
-        }
+        } // end buttonEditAccount.setOnClickListener
 
         buttonEditPhoto.setOnClickListener {
             displayToast(R.string.not_implemented_yet)
@@ -166,7 +218,7 @@ class AccountFragment : Fragment() {
         }
 
         return root
-    }
+    } // end onCreateView()
 
     private fun isValidName(str: String?): Boolean {
         return str != null && str.length >= 4
@@ -179,12 +231,6 @@ class AccountFragment : Fragment() {
         val pattern = Pattern.compile(usernamePattern)
         val matcher = pattern.matcher(lowerUsername)
         return str.length >= 4 && matcher.matches()
-    }
-
-    private fun isFreeUsername(str: String?): Boolean {
-        if (str == null) return false
-        val lowerUsername = str.toLowerCase(Locale.ROOT)
-        return lowerUsername != "alex"
     }
 
     private fun displayToast(string: Int) {

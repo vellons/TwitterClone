@@ -107,7 +107,7 @@ class CreateAccountActivity : AppCompatActivity() {
             .addOnSuccessListener { result ->
                 for (document in result) {
                     Log.d(TAG, "Username: ${document.id} => ${document.data}")
-                    if (document["username"] == lowerUsername) { // Username already exist
+                    if (document.getString("username") == lowerUsername) { // Username already exist
                         val editTextUsername = findViewById<EditText>(R.id.editTextUsername)
                         editTextUsername.error = getString(R.string.invalid_username_already_used)
                         return@addOnSuccessListener
@@ -117,7 +117,7 @@ class CreateAccountActivity : AppCompatActivity() {
             }
             .addOnFailureListener { exception ->
                 Log.w(TAG, "Error getting documents. Failed to check username", exception)
-                displayToast("Failed to check username")
+                displayToast(getString(R.string.check_internet_connection))
             }
     }
 
