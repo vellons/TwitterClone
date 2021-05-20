@@ -7,13 +7,13 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Source
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import it.uninsubria.pdm.vellons.twitterclone.MainActivity
 import it.uninsubria.pdm.vellons.twitterclone.R
@@ -23,6 +23,8 @@ import java.util.regex.Pattern
 class AccountFragment : Fragment() {
     private val TAG = "AccountFragment"
     private lateinit var auth: FirebaseAuth
+    private lateinit var firestore: FirebaseFirestore
+    private var isUserVerified: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,6 +32,7 @@ class AccountFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         auth = Firebase.auth
+        firestore = Firebase.firestore
         val root = inflater.inflate(R.layout.fragment_account, container, false)
         val textViewTitle: TextView = root.findViewById(R.id.textViewTitle)
         val textViewProfileName: TextView = root.findViewById(R.id.textViewProfileName)
@@ -42,6 +45,45 @@ class AccountFragment : Fragment() {
         val buttonEditAccount: Button = root.findViewById(R.id.buttonEditAccount)
         val buttonEditPhoto: Button = root.findViewById(R.id.buttonEditPhoto)
         val buttonLogout: Button = root.findViewById(R.id.buttonLogout)
+        imageViewBadge.visibility = View.GONE
+        textViewProfileName.text = ""
+        textViewProfileUsername.text = ""
+        textViewProfileBio.text = ""
+
+        // Get FirebaseAuth user instance
+        val currentUser = auth.currentUser
+        val uid = currentUser?.uid
+        if (currentUser == null || uid == null) {
+            Log.d(TAG, "User not logged")
+            // Redirect MainPage
+            val intent = Intent(context, MainActivity::class.java)
+            startActivity(intent)
+            activity?.finish()
+        } else {
+            val source = Source.SERVER // Avoid using Firestore cache
+            // Get current users info from DB
+            val userRef = firestore.collection("users").document(uid)
+            userRef.get(source).addOnSuccessListener { document ->
+                Log.d(TAG, "Current user uid: $uid Data: " + document.data)
+                if (document != null) {
+                    textViewProfileName.text = document.getString("name")
+                    textViewProfileUsername.text = "@" + document.getString("username")
+                    textViewProfileBio.text = document.getString("bio")
+                    isUserVerified = document.getBoolean("verified") == true
+                    if (isUserVerified) {
+                        imageViewBadge.visibility = View.VISIBLE // Only if verified user
+                    }
+                } else {
+                    Log.d(TAG, "No such document. User do not exists in DB")
+                }
+            }.addOnFailureListener { exception ->
+                textViewProfileName.text = ""
+                textViewProfileUsername.text = ""
+                textViewProfileBio.text = getString(R.string.check_internet_connection)
+                Log.d(TAG, "Failed to get user info ", exception)
+                displayToast(R.string.check_internet_connection)
+            }
+        }
 
         buttonEditAccount.setOnClickListener {
             if (textViewTitle.text == getString(R.string.your_account)) {
@@ -94,11 +136,13 @@ class AccountFragment : Fragment() {
                     editTextProfileName.visibility = View.GONE
                     editTextProfileUsername.visibility = View.GONE
                     editTextProfileBio.visibility = View.GONE
-                    imageViewBadge.visibility = View.VISIBLE // Only if verified user
                     textViewProfileName.visibility = View.VISIBLE
                     textViewProfileUsername.visibility = View.VISIBLE
                     textViewProfileBio.visibility = View.VISIBLE
                     buttonEditAccount.text = getString(R.string.edit_account)
+                    if (isUserVerified) {
+                        imageViewBadge.visibility = View.VISIBLE // Only if verified user
+                    }
                 }
             }
         }

@@ -146,12 +146,14 @@ class CreateAccountActivity : AppCompatActivity() {
     }
 
     private fun saveUser(uid: String) {
+        // Create new user record in 'users' collection
         val user = hashMapOf(
             "username" to user,
             "verified" to false,
             "name" to name,
             "photo" to null,
             "registeredAt" to FieldValue.serverTimestamp(),
+            "updatedAt" to FieldValue.serverTimestamp(),
             "bio" to ""
         )
         firestore.collection("users").document(uid)

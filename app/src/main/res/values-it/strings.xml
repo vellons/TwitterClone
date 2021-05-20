@@ -42,4 +42,5 @@
     <string name="take_photo_from_gallery">Scegli una foto dalla galleria</string>
     <string name="add_source_for_this_tweet">Aggiungi una fonte per questo tweet</string>
     <string name="fail_to_open_camera">Non è stato possibili aprire la camera</string>
+    <string name="check_internet_connection">Perfavore, controlla la tua connesione ad internet</string>
 </resources>
