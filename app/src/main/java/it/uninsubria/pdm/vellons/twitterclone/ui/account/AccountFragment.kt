@@ -1,6 +1,8 @@
 package it.uninsubria.pdm.vellons.twitterclone.ui.account
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -10,17 +12,24 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+import it.uninsubria.pdm.vellons.twitterclone.MainActivity
 import it.uninsubria.pdm.vellons.twitterclone.R
 import java.util.*
 import java.util.regex.Pattern
 
 class AccountFragment : Fragment() {
+    private val TAG = "AccountFragment"
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        auth = Firebase.auth
         val root = inflater.inflate(R.layout.fragment_account, container, false)
         val textViewTitle: TextView = root.findViewById(R.id.textViewTitle)
         val textViewProfileName: TextView = root.findViewById(R.id.textViewProfileName)
@@ -99,7 +108,12 @@ class AccountFragment : Fragment() {
         }
 
         buttonLogout.setOnClickListener {
-            displayToast(R.string.not_implemented_yet)
+            auth.signOut()
+            Log.d(TAG, "Logout completed")
+            // Redirect MainPage
+            val intent = Intent(context, MainActivity::class.java)
+            startActivity(intent)
+            activity?.finish()
         }
 
         buttonLogout.setOnLongClickListener {

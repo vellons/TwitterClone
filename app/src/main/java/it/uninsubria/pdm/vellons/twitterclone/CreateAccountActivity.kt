@@ -1,5 +1,6 @@
 package it.uninsubria.pdm.vellons.twitterclone
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -105,7 +106,7 @@ class CreateAccountActivity : AppCompatActivity() {
             .get()
             .addOnSuccessListener { result ->
                 for (document in result) {
-                    Log.d(TAG, "${document.id} => ${document.data}")
+                    Log.d(TAG, "Username: ${document.id} => ${document.data}")
                     if (document["username"] == lowerUsername) { // Username already exist
                         val editTextUsername = findViewById<EditText>(R.id.editTextUsername)
                         editTextUsername.error = getString(R.string.invalid_username_already_used)
@@ -157,7 +158,10 @@ class CreateAccountActivity : AppCompatActivity() {
             .set(user)
             .addOnSuccessListener {
                 Log.d(TAG, "User $uid saved to DB")
-                displayToast("YOU ARE IN!")
+                // Redirect to navigator if user is logged
+                val intent = Intent(this@CreateAccountActivity, NavigatorActivity::class.java)
+                startActivity(intent)
+                finish()
             }
             .addOnFailureListener { exception ->
                 Log.w(TAG, "Error writing document. Failed to save user in collection", exception)

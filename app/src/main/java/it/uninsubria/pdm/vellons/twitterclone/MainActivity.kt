@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity() {
             // Redirect to navigator if user is logged
             val intent = Intent(this@MainActivity, NavigatorActivity::class.java)
             startActivity(intent)
+            finish()
         }
     }
 
