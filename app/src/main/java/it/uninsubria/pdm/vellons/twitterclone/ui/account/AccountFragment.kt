@@ -89,6 +89,9 @@ class AccountFragment : Fragment() {
         }
 
         buttonEditAccount.setOnClickListener {
+            if (textViewProfileUsername.text == "") {
+                return@setOnClickListener
+            }
             if (textViewTitle.text == getString(R.string.your_account)) {
                 // Enable edit mode
                 textViewTitle.text = getString(R.string.edit_your_account)

@@ -43,4 +43,9 @@
     <string name="add_source_for_this_tweet">Add a source for this tweet</string>
     <string name="fail_to_open_camera">Can\'t open camera to take picture</string>
     <string name="check_internet_connection">Please, check your internet connection</string>
+    <string name="login">Login</string>
+    <string name="enter_in_your_account">Enter in your account</string>
+    <string name="email_or_password_wrong">Email or password wrong</string>
+    <string name="reset_password">Reset password email</string>
+    <string name="reset_password_instruction">You will receive an email to reset your password</string>
 </resources>
