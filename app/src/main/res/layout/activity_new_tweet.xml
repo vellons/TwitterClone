@@ -42,7 +42,7 @@
         android:layout_marginTop="12dp"
         android:adjustViewBounds="true"
         android:padding="8dp"
-        android:scaleType="fitCenter"
+        android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageButtonDiscardTweet"
         app:shapeAppearanceOverlay="@style/circleImageView"

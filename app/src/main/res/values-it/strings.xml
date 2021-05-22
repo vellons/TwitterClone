@@ -33,6 +33,7 @@
     <string name="insert_small_bio">Inserisci un piccola biografia qui</string>
     <string name="edit_account">Modifica account</string>
     <string name="add_photo">Aggiungi foto</string>
+    <string name="edit_photo">Modifica foto</string>
     <string name="logout">Logout</string>
     <string name="save_account">Salva account</string>
     <string name="edit_your_account">Modifica il tuo account</string>
@@ -48,4 +49,6 @@
     <string name="email_or_password_wrong">Email o password sbagliate</string>
     <string name="reset_password">Reset password email</string>
     <string name="reset_password_instruction">Riceverai a breve un\'email per inserire una nuova password</string>
+    <string name="upload_image_failed">Caricamento immagine fallito, riprova</string>
+    <string name="upload_image_succes">Caricamento immagine completato</string>
 </resources>

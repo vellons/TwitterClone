@@ -33,6 +33,7 @@
     <string name="insert_small_bio">Insert a small profile biography here</string>
     <string name="edit_account">Edit account</string>
     <string name="add_photo">Add photo</string>
+    <string name="edit_photo">Edit photo</string>
     <string name="logout">Logout</string>
     <string name="save_account">Save account</string>
     <string name="edit_your_account">Edit your account</string>
@@ -48,4 +49,6 @@
     <string name="email_or_password_wrong">Email or password wrong</string>
     <string name="reset_password">Reset password email</string>
     <string name="reset_password_instruction">You will receive an email to reset your password</string>
+    <string name="upload_image_failed">Failed to upload the image, try again</string>
+    <string name="upload_image_succes">Image upload confirmed</string>
 </resources>

@@ -2,6 +2,9 @@ package it.uninsubria.pdm.vellons.twitterclone.ui.account
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -10,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
+import com.google.android.material.imageview.ShapeableImageView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FieldValue
@@ -17,15 +21,21 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Source
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storage
 import it.uninsubria.pdm.vellons.twitterclone.MainActivity
 import it.uninsubria.pdm.vellons.twitterclone.R
+import java.io.ByteArrayOutputStream
 import java.util.*
 import java.util.regex.Pattern
 
+
 class AccountFragment : Fragment() {
     private val TAG = "AccountFragment"
+    private val REQUEST_PICK_IMAGE_FOR_ACCOUNT = 1003
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
+    private lateinit var storage: FirebaseStorage
     private var isUserVerified: Boolean = false
 
     @SuppressLint("SetTextI18n")
@@ -36,6 +46,7 @@ class AccountFragment : Fragment() {
     ): View? {
         auth = Firebase.auth
         firestore = Firebase.firestore
+        storage = Firebase.storage
         val root = inflater.inflate(R.layout.fragment_account, container, false)
         val textViewTitle: TextView = root.findViewById(R.id.textViewTitle)
         val textViewProfileName: TextView = root.findViewById(R.id.textViewProfileName)
@@ -48,6 +59,8 @@ class AccountFragment : Fragment() {
         val buttonEditAccount: Button = root.findViewById(R.id.buttonEditAccount)
         val buttonEditPhoto: Button = root.findViewById(R.id.buttonEditPhoto)
         val buttonLogout: Button = root.findViewById(R.id.buttonLogout)
+        val imageViewProfileUserImage: ShapeableImageView =
+            root.findViewById(R.id.imageViewProfileUserImage)
         imageViewBadge.visibility = View.GONE
         textViewProfileName.text = ""
         textViewProfileUsername.text = ""
@@ -72,9 +85,27 @@ class AccountFragment : Fragment() {
                     textViewProfileName.text = document.getString("name")
                     textViewProfileUsername.text = "@" + document.getString("username")
                     textViewProfileBio.text = document.getString("bio")
+
                     isUserVerified = document.getBoolean("verified") == true
                     if (isUserVerified) {
                         imageViewBadge.visibility = View.VISIBLE // Only if verified user
+                    }
+
+                    val profilePath = document.getString("photo")
+                    if (profilePath != null) { // Download profile photo if present
+                        buttonEditPhoto.text = getString(R.string.edit_photo)
+                        val storageRef = storage.reference
+                        val profilePhotoRef = storageRef.child(profilePath)
+
+                        val ONE_MEGABYTE: Long = 1024 * 1024
+                        // .getBytes take as a parameter the maximum download size accepted
+                        profilePhotoRef.getBytes(8 * ONE_MEGABYTE)
+                            .addOnSuccessListener { bytes ->
+                                val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+                                imageViewProfileUserImage.setImageBitmap(bmp)
+                            }.addOnFailureListener {
+                                Log.d(TAG, "Failed to get download user image info ", it)
+                            }
                     }
                 } else {
                     Log.d(TAG, "No such document. User do not exists in DB")
@@ -88,7 +119,7 @@ class AccountFragment : Fragment() {
             }
         }
 
-        buttonEditAccount.setOnClickListener {
+        buttonEditAccount.setOnClickListener { // Edit account button click
             if (textViewProfileUsername.text == "") {
                 return@setOnClickListener
             }
@@ -108,7 +139,7 @@ class AccountFragment : Fragment() {
                 editTextProfileBio.visibility = View.VISIBLE
                 buttonEditAccount.text = getString(R.string.save_account)
             } else {
-                // Disable edit mode
+                // Disable edit mode (check if i need to save data)
                 val name: String = editTextProfileName.text.toString()
                 var user: String = editTextProfileUsername.text.toString()
                 val bio: String = editTextProfileBio.text.toString()
@@ -127,7 +158,7 @@ class AccountFragment : Fragment() {
                     user = user.toLowerCase(Locale.ROOT)
                     // Check if user update profile info
                     if (name != textViewProfileName.text || ("@$user") != textViewProfileUsername.text || textViewProfileBio.text != bio) {
-
+                        // Data changed!
                         // Check if username is not used by others
                         firestore.collection("users")
                             .whereEqualTo("username", user)
@@ -146,7 +177,7 @@ class AccountFragment : Fragment() {
                                 if (currentUser != null && uid != null) {
                                     // Get current users info from DB
                                     val userRef = firestore.collection("users").document(uid)
-                                    // Update user infos
+                                    // Update user info
                                     userRef.update("name", name)
                                     userRef.update("username", user)
                                     userRef.update("bio", bio)
@@ -168,9 +199,11 @@ class AccountFragment : Fragment() {
                                             textViewProfileName.visibility = View.VISIBLE
                                             textViewProfileUsername.visibility = View.VISIBLE
                                             textViewProfileBio.visibility = View.VISIBLE
-                                            buttonEditAccount.text = getString(R.string.edit_account)
+                                            buttonEditAccount.text =
+                                                getString(R.string.edit_account)
                                             if (isUserVerified) {
-                                                imageViewBadge.visibility = View.VISIBLE // Only if verified user
+                                                imageViewBadge.visibility =
+                                                    View.VISIBLE // Only if verified user
                                             }
                                         }
                                         .addOnFailureListener { exception ->
@@ -185,7 +218,7 @@ class AccountFragment : Fragment() {
                             }
 
                     } else {
-                        // Restore normal mode
+                        // Restore normal mode if data not changed
                         textViewTitle.text = getString(R.string.your_account)
                         editTextProfileName.visibility = View.GONE
                         editTextProfileUsername.visibility = View.GONE
@@ -203,7 +236,7 @@ class AccountFragment : Fragment() {
         } // end buttonEditAccount.setOnClickListener
 
         buttonEditPhoto.setOnClickListener {
-            displayToast(R.string.not_implemented_yet)
+            openGallery()
         }
 
         buttonLogout.setOnClickListener {
@@ -244,5 +277,71 @@ class AccountFragment : Fragment() {
         )
         toast.setGravity(Gravity.TOP, 0, 75)
         toast.show()
+    }
+
+    private fun openGallery() {
+        Intent(Intent.ACTION_GET_CONTENT).also { intent ->
+            intent.type = "image/*"
+            activity?.let {
+                intent.resolveActivity(it.packageManager)?.also {
+                    startActivityForResult(intent, REQUEST_PICK_IMAGE_FOR_ACCOUNT)
+                }
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        // Upload image to Firebase
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_PICK_IMAGE_FOR_ACCOUNT && data?.data != null) { // Save selected image to Firebase storage
+            val uri = data.data
+            val imageViewProfileUserImage: ShapeableImageView =
+                requireActivity().findViewById(R.id.imageViewProfileUserImage)
+            imageViewProfileUserImage.setImageURI(uri) // Set photo on account image
+
+            val buttonEditPhoto: Button = requireActivity().findViewById(R.id.buttonEditPhoto)
+            buttonEditPhoto.text = getString(R.string.edit_photo)
+
+            // Get user id to save image on storage
+            val uid = auth.currentUser!!.uid
+
+            // Create reference for the image to upload
+            val storageRef = storage.reference
+            val profilePhotoRef = storageRef.child("users-photo/${uid}.png")
+
+            // Prepare image stream
+            imageViewProfileUserImage.isDrawingCacheEnabled = true
+            imageViewProfileUserImage.buildDrawingCache()
+            val bitmap = (imageViewProfileUserImage.drawable as BitmapDrawable).bitmap
+            val baos = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos)
+            val toUploadData = baos.toByteArray()
+
+            val uploadTask = profilePhotoRef.putBytes(toUploadData) // Upload task
+            uploadTask.addOnFailureListener {
+                Log.d(TAG, "Storage upload failed for " + profilePhotoRef.path)
+                displayToast(R.string.upload_image_failed)
+            }.addOnSuccessListener { taskSnapshot ->
+                Log.d(
+                    TAG, "Storage upload confirmed for " + profilePhotoRef.path
+                            + " size: " + taskSnapshot.metadata?.sizeBytes
+                )
+                displayToast(R.string.upload_image_succes)
+
+                // Save path to Firestore user profile
+                val userRef = firestore.collection("users").document(uid)
+                // Update user infos
+                userRef.update("photo", profilePhotoRef.path)
+                userRef.update("updatedAt", FieldValue.serverTimestamp())
+                    .addOnSuccessListener {
+                        displayToast(R.string.edit_account_completed)
+                        Log.d(TAG, "User photo successfully updated!")
+                    }
+                    .addOnFailureListener { exception ->
+                        displayToast(R.string.check_internet_connection)
+                        Log.w(TAG, "Error updating user photo to DB", exception)
+                    }
+            }
+        }
     }
 }
