@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Talks</string>
-    <string name="app_info_message">APP DEMO. Versione 1.1 (debug)</string>
+    <string name="app_info_message">APP DEMO. Versione 1.2 (debug)</string>
     <string name="create_an_account">Crea un account</string>
     <string name="already_have_an_account">Hai già un account? Accedi</string>
     <string name="info">Info</string>
@@ -47,7 +47,7 @@
     <string name="login">Login</string>
     <string name="enter_in_your_account">Entra nel tuo account</string>
     <string name="email_or_password_wrong">Email o password sbagliate</string>
-    <string name="reset_password">Reset password email</string>
+    <string name="reset_password">Reset password per email</string>
     <string name="reset_password_instruction">Riceverai a breve un\'email per inserire una nuova password</string>
     <string name="upload_image_failed">Caricamento immagine fallito, riprova</string>
     <string name="upload_image_succes">Caricamento immagine completato</string>

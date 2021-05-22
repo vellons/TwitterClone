@@ -104,7 +104,7 @@ class AccountFragment : Fragment() {
                                 val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
                                 imageViewProfileUserImage.setImageBitmap(bmp)
                             }.addOnFailureListener {
-                                Log.d(TAG, "Failed to get download user image info ", it)
+                                Log.d(TAG, "Failed to download user image ", it)
                             }
                     }
                 } else {
