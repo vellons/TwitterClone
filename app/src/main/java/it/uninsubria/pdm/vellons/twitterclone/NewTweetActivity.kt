@@ -4,13 +4,16 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
+import android.util.Patterns
 import android.view.Gravity
 import android.view.View
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
@@ -25,6 +28,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -85,6 +89,7 @@ class NewTweetActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        // To handle chosen photo
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Log.d(TAG, "Photo taken. PATH:  $currentPhotoPath")
@@ -156,11 +161,12 @@ class NewTweetActivity : AppCompatActivity() {
     @SuppressLint("SimpleDateFormat")
     @Throws(IOException::class)
     private fun createImageFile(): File {
-        // Create an image file name
+        // Doc: https://developer.android.com/training/camera/photobasics#kotlin
+        // Create an image file name to save inside os
         val timeStamp: String = SimpleDateFormat("yyyy-MM-dd-HHmmss").format(Date())
         // DIRECTORY_PICTURES refer to res/xml/file_paths.xml
         val storageDir: File? = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        return File.createTempFile(
+        return File.createTempFile( // Image saved in phone memory
             "Tweet_${timeStamp}_",
             ".jpg",
             storageDir
@@ -200,42 +206,89 @@ class NewTweetActivity : AppCompatActivity() {
         toast.show()
     }
 
+    @SuppressLint("SimpleDateFormat")
     fun postTweet(v: View) {
+        // onClick method for button
         val editTextNewTweetText: EditText = findViewById(R.id.editTextNewTweetText)
+        val editTextCreateTweetSourceUrl: EditText = findViewById(R.id.editTextCreateTweetSourceUrl)
         val tweetText = editTextNewTweetText.text.toString()
-        if (isValidTweet(tweetText)) {
-            val uid = auth.currentUser?.uid
-            val tweet = hashMapOf(
-                "uid" to auth.currentUser?.uid,
-                "visible" to true,
-                "tweet" to tweetText,
-                "photo" to null,
-                "postedAt" to FieldValue.serverTimestamp(),
-                "likes" to FieldValue.arrayUnion(),
-                "comments" to FieldValue.arrayUnion()
-            )
-            firestore.collection("tweets").document()
-                .set(tweet)
-                .addOnSuccessListener {
-                    Log.d(TAG, "Tweet for user $uid saved to DB")
-                    displayToast(R.string.tweet_posted)
-                    finish()
-                }
-                .addOnFailureListener { exception ->
-                    Log.w(
-                        TAG,
-                        "Error writing document. Failed to save tweet in collection",
-                        exception
+        val tweetSourcePath = editTextCreateTweetSourceUrl.text.toString()
+        val uid = auth.currentUser?.uid
+        val buttonPostTweet: Button = findViewById(R.id.buttonPostTweet)
+        buttonPostTweet.isActivated = false
+
+        if (isValidTweet(tweetText) &&
+            (Patterns.WEB_URL.matcher(tweetSourcePath).matches() || tweetSourcePath.isEmpty())
+        ) {
+            if (isTweetWithPhoto) { // If tweet has photo
+                val timeStamp: String = SimpleDateFormat("yyyy-MM-dd-HHmmss").format(Date())
+                // Create reference for the image to upload
+                val storageRef = storage.reference
+                val tweetPhotoRef = storageRef.child("tweets-photo/${uid}-${timeStamp}.png")
+
+                // Prepare image stream
+                imageViewCreateTweetImage.isDrawingCacheEnabled = true
+                imageViewCreateTweetImage.buildDrawingCache()
+                val bitmap = (imageViewCreateTweetImage.drawable as BitmapDrawable).bitmap
+                val baos = ByteArrayOutputStream()
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos)
+                val toUploadData = baos.toByteArray()
+
+                val uploadTask = tweetPhotoRef.putBytes(toUploadData) // Upload task
+                uploadTask.addOnFailureListener {
+                    Log.d(TAG, "Storage upload failed for " + tweetPhotoRef.path)
+                    displayToast(R.string.upload_image_failed)
+                }.addOnSuccessListener { taskSnapshot ->
+                    Log.d(
+                        TAG, "Storage upload confirmed for " + tweetPhotoRef.path
+                                + " size: " + taskSnapshot.metadata?.sizeBytes
                     )
-                    displayToast(R.string.check_internet_connection)
+                    saveTweetToFirebase(tweetText, tweetPhotoRef.path, tweetSourcePath) // Post
                 }
+            } else {
+                saveTweetToFirebase(tweetText, null, tweetSourcePath) // Tweet without photo
+            }
         } else {
             if (tweetText.isEmpty()) {
                 editTextNewTweetText.error = getString(R.string.what_s_new)
-            } else {
+            } else if (!isValidTweet(tweetText)) {
                 editTextNewTweetText.error = getString(R.string.insert_8_char)
             }
+            if (!tweetSourcePath.isEmpty()
+                && !Patterns.WEB_URL.matcher(tweetSourcePath).matches()
+            ) {
+                editTextCreateTweetSourceUrl.error = getString(R.string.insert_a_valid_link)
+            }
         }
+    }
+
+    private fun saveTweetToFirebase(tweetText: String, photoPath: String?, sourcePath: String) {
+        val uid = auth.currentUser?.uid
+        val tweet = hashMapOf(
+            "uid" to uid,
+            "visible" to true,
+            "tweet" to tweetText,
+            "photo" to photoPath,
+            "sourcePath" to sourcePath,
+            "postedAt" to FieldValue.serverTimestamp(),
+            "likes" to FieldValue.arrayUnion(),
+            "comments" to FieldValue.arrayUnion()
+        )
+        firestore.collection("tweets").document()
+            .set(tweet)
+            .addOnSuccessListener {
+                Log.d(TAG, "Tweet for user $uid saved to DB")
+                displayToast(R.string.tweet_posted)
+                finish()
+            }
+            .addOnFailureListener { exception ->
+                Log.w(
+                    TAG,
+                    "Error writing document. Failed to save tweet in collection",
+                    exception
+                )
+                displayToast(R.string.check_internet_connection)
+            }
     }
 
     private fun isValidTweet(str: String?): Boolean {

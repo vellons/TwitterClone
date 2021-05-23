@@ -40,6 +40,7 @@
     <string name="edit_account_completed">Informazioni account modificate</string>
     <string name="what_s_new">Cosa c\'è di nuovo?</string>
     <string name="insert_8_char">Inserisci almeno 8 caratteri</string>
+    <string name="insert_a_valid_link">Inserisci un link valido</string>
     <string name="take_picture">Scatta una foto ora</string>
     <string name="take_photo_from_gallery">Scegli una foto dalla galleria</string>
     <string name="add_source_for_this_tweet">Aggiungi una fonte per questo tweet</string>
