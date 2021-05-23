@@ -269,7 +269,7 @@ class NewTweetActivity : AppCompatActivity() {
             "visible" to true,
             "tweet" to tweetText,
             "photo" to photoPath,
-            "sourcePath" to sourcePath,
+            "sourcePath" to if (sourcePath == "") null else sourcePath,
             "postedAt" to FieldValue.serverTimestamp(),
             "likes" to FieldValue.arrayUnion(),
             "comments" to FieldValue.arrayUnion()
