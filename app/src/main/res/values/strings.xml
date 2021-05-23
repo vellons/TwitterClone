@@ -39,6 +39,7 @@
     <string name="edit_your_account">Edit your account</string>
     <string name="edit_account_completed">Account info changed</string>
     <string name="what_s_new">What\'s new?</string>
+    <string name="insert_8_char">Insert at least 8 character</string>
     <string name="take_picture">Take a picture now</string>
     <string name="take_photo_from_gallery">Take photo from gallery</string>
     <string name="add_source_for_this_tweet">Add a source for this tweet</string>
@@ -51,4 +52,5 @@
     <string name="reset_password_instruction">You will receive an email to reset your password</string>
     <string name="upload_image_failed">Failed to upload the image, try again</string>
     <string name="upload_image_succes">Image upload confirmed</string>
+    <string name="tweet_posted">Tweet posted!!!</string>
 </resources>

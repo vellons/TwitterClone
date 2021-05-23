@@ -11,7 +11,6 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.Gravity
 import android.view.View
-import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
@@ -20,6 +19,7 @@ import androidx.core.content.FileProvider
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -52,7 +52,6 @@ class NewTweetActivity : AppCompatActivity() {
         val imageViewProfileUserImage: ShapeableImageView =
             findViewById(R.id.imageViewProfileUserImage)
         val editTextNewTweetText: EditText = findViewById(R.id.editTextNewTweetText)
-        val buttonPostTweet: Button = findViewById(R.id.buttonPostTweet)
         imageViewCreateTweetImage.visibility = View.GONE // Hide tweet image
 
         editTextNewTweetText.requestFocus() // Set focus to open keyboard
@@ -82,11 +81,6 @@ class NewTweetActivity : AppCompatActivity() {
             }
         }.addOnFailureListener { exception ->
             Log.d(TAG, "Failed to get user info ", exception)
-        }
-
-
-        buttonPostTweet.setOnClickListener { // Button post tweet clicked
-            displayToast(R.string.not_implemented_yet)
         }
     }
 
@@ -204,5 +198,47 @@ class NewTweetActivity : AppCompatActivity() {
         )
         toast.setGravity(Gravity.TOP, 0, 75)
         toast.show()
+    }
+
+    fun postTweet(v: View) {
+        val editTextNewTweetText: EditText = findViewById(R.id.editTextNewTweetText)
+        val tweetText = editTextNewTweetText.text.toString()
+        if (isValidTweet(tweetText)) {
+            val uid = auth.currentUser?.uid
+            val tweet = hashMapOf(
+                "uid" to auth.currentUser?.uid,
+                "visible" to true,
+                "tweet" to tweetText,
+                "photo" to null,
+                "postedAt" to FieldValue.serverTimestamp(),
+                "likes" to FieldValue.arrayUnion(),
+                "comments" to FieldValue.arrayUnion()
+            )
+            firestore.collection("tweets").document()
+                .set(tweet)
+                .addOnSuccessListener {
+                    Log.d(TAG, "Tweet for user $uid saved to DB")
+                    displayToast(R.string.tweet_posted)
+                    finish()
+                }
+                .addOnFailureListener { exception ->
+                    Log.w(
+                        TAG,
+                        "Error writing document. Failed to save tweet in collection",
+                        exception
+                    )
+                    displayToast(R.string.check_internet_connection)
+                }
+        } else {
+            if (tweetText.isEmpty()) {
+                editTextNewTweetText.error = getString(R.string.what_s_new)
+            } else {
+                editTextNewTweetText.error = getString(R.string.insert_8_char)
+            }
+        }
+    }
+
+    private fun isValidTweet(str: String?): Boolean {
+        return str != null && str.length >= 8
     }
 }
