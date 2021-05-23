@@ -54,6 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="92dp"
         android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
         android:autofillHints="text"
         android:background="@null"
         android:ems="10"
@@ -66,6 +67,36 @@
         app:layout_constraintStart_toEndOf="@+id/imageViewProfileUserImage"
         app:layout_constraintTop_toTopOf="@+id/imageViewProfileUserImage" />
 
+    <EditText
+        android:id="@+id/editTextCreateTweetSourceUrl"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:autofillHints="text"
+        android:background="@null"
+        android:ems="10"
+        android:hint="@string/add_source_for_this_tweet"
+        android:inputType="textUri"
+        android:maxLength="128"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/imageViewProfileUserImage"
+        app:layout_constraintTop_toBottomOf="@+id/editTextNewTweetText" />
+
+    <ImageView
+        android:id="@+id/imageViewCreateTweetImage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:contentDescription="@string/photo"
+        android:padding="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/imageViewProfileUserImage"
+        app:layout_constraintTop_toBottomOf="@+id/editTextCreateTweetSourceUrl"
+        app:srcCompat="@mipmap/ic_launcher_foreground" />
 
     <ImageButton
         android:id="@+id/imageButtonTakePicture"
@@ -96,20 +127,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageButtonTakePicture"
         app:srcCompat="@drawable/ic_add_gallery_photo_24" />
-
-    <ImageButton
-        android:id="@+id/imageButtonAddSourceUrl"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/my_button_transparent"
-        android:contentDescription="@string/add_source_for_this_tweet"
-        android:onClick="setTweetSource"
-        android:padding="10dp"
-        android:tooltipText="@string/add_source_for_this_tweet"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageButtonTakePhotoFromGallery"
-        app:srcCompat="@drawable/ic_open_in_new_24" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

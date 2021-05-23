@@ -1,17 +1,22 @@
 package it.uninsubria.pdm.vellons.twitterclone
 
-import android.content.ActivityNotFoundException
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -20,6 +25,10 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
+import java.io.File
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
 
 class NewTweetActivity : AppCompatActivity() {
     private val TAG = "NewTweetActivity"
@@ -28,6 +37,9 @@ class NewTweetActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
     private lateinit var storage: FirebaseStorage
+    private lateinit var currentPhotoPath: String  // Used to save photo taken
+    private lateinit var imageViewCreateTweetImage: ImageView
+    private var isTweetWithPhoto = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,10 +48,12 @@ class NewTweetActivity : AppCompatActivity() {
         firestore = Firebase.firestore
         storage = Firebase.storage
 
+        imageViewCreateTweetImage = findViewById(R.id.imageViewCreateTweetImage)
         val imageViewProfileUserImage: ShapeableImageView =
             findViewById(R.id.imageViewProfileUserImage)
         val editTextNewTweetText: EditText = findViewById(R.id.editTextNewTweetText)
         val buttonPostTweet: Button = findViewById(R.id.buttonPostTweet)
+        imageViewCreateTweetImage.visibility = View.GONE // Hide tweet image
 
         editTextNewTweetText.requestFocus() // Set focus to open keyboard
 
@@ -79,11 +93,20 @@ class NewTweetActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-//            val imageBitmap = data.extras.get("data") as Bitmap
-//            imageView.setImageBitmap(imageBitmap)
+            Log.d(TAG, "Photo taken. PATH:  $currentPhotoPath")
+            if (data?.extras?.get("data") != null) { // Used to get the thumbnail
+                val imageBitmap = data.extras?.get("data") as Bitmap
+                imageViewCreateTweetImage.visibility = View.VISIBLE
+                imageViewCreateTweetImage.setImageBitmap(imageBitmap)
+                isTweetWithPhoto = true
+            } else {
+                setPicFromPath() // Get full quality image and scale to fit
+                isTweetWithPhoto = true
+            }
         } else if (requestCode == REQUEST_PICK_IMAGE && data?.data != null) {
-//            val uri = data.data
-//            imageView.setImageURI(uri)
+            imageViewCreateTweetImage.visibility = View.VISIBLE
+            imageViewCreateTweetImage.setImageURI(data.data)
+            isTweetWithPhoto = true
         }
     }
 
@@ -99,16 +122,68 @@ class NewTweetActivity : AppCompatActivity() {
         openGallery()
     }
 
-    fun setTweetSource(v: View) {
-        displayToast(R.string.not_implemented_yet)
+    private fun dispatchTakePictureIntent() {
+        // This take only the thumbnail
+        // val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        // try {
+        //    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+        // } catch (e: ActivityNotFoundException) {
+        //    displayToast(R.string.fail_to_open_camera)
+        // }
+
+        // Doc: https://developer.android.com/training/camera/photobasics#kotlin
+        // The Android Camera application saves a full-size photo if you give it a file to save into.
+        // You must provide a fully qualified file name where the camera app should save the photo.
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            // Ensure that there's a camera activity to handle the intent
+            takePictureIntent.resolveActivity(packageManager)?.also {
+                // Create the File where the photo should go
+                val photoFile: File? = try {
+                    createImageFile()
+                } catch (ex: IOException) {
+                    displayToast(R.string.fail_to_open_camera)
+                    null
+                }
+                // Continue only if the File was successfully created
+                // AUTHORITY defined in AndroidManifest.xml
+                photoFile?.also {
+                    val photoURI: Uri = FileProvider.getUriForFile(
+                        this,
+                        "it.uninsubria.pdm.vellons.twitterclone.fileprovider",
+                        it
+                    )
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+                }
+            }
+        }
     }
 
-    private fun dispatchTakePictureIntent() {
-        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        try {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
-        } catch (e: ActivityNotFoundException) {
-            displayToast(R.string.fail_to_open_camera)
+    @SuppressLint("SimpleDateFormat")
+    @Throws(IOException::class)
+    private fun createImageFile(): File {
+        // Create an image file name
+        val timeStamp: String = SimpleDateFormat("yyyy-MM-dd-HHmmss").format(Date())
+        // DIRECTORY_PICTURES refer to res/xml/file_paths.xml
+        val storageDir: File? = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        return File.createTempFile(
+            "Tweet_${timeStamp}_",
+            ".jpg",
+            storageDir
+        ).apply {
+            // Save a file: path for use with ACTION_VIEW intents
+            currentPhotoPath = absolutePath
+        }
+    }
+
+    private fun setPicFromPath() {
+        val bmOptions = BitmapFactory.Options().apply {
+            inJustDecodeBounds = false
+            inSampleSize = 4 // Scale factor
+        }
+        BitmapFactory.decodeFile(currentPhotoPath, bmOptions)?.also { bitmap ->
+            imageViewCreateTweetImage.setImageBitmap(bitmap)
+            imageViewCreateTweetImage.visibility = View.VISIBLE
         }
     }
 
