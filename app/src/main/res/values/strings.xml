@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Talks</string>
-    <string name="app_info_message">DEMO APP. Version 1.2 (debug)</string>
+    <string name="app_info_message">DEMO APP. Version 1.3 (debug)</string>
     <string name="create_an_account">Create an account</string>
     <string name="already_have_an_account">Already have an account? Login</string>
     <string name="info">Info</string>

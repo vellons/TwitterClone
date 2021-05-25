@@ -16,8 +16,13 @@ import it.uninsubria.pdm.vellons.twitterclone.R
 import it.uninsubria.pdm.vellons.twitterclone.UserDetailActivity
 import it.uninsubria.pdm.vellons.twitterclone.user.User
 
-class TweetAdapter(private val tweetList: List<Tweet>, private val context: Context?) :
+class TweetAdapter(initialTweetList: List<Tweet>, private val context: Context?) :
     RecyclerView.Adapter<TweetAdapter.TweetViewHolder>() {
+    var tweetList: List<Tweet> = ArrayList<Tweet>()
+
+    init {
+        tweetList = initialTweetList
+    }
 
     class TweetViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         // Useful: https://www.youtube.com/watch?v=6Gm3eMG8KqI
