@@ -63,7 +63,7 @@ class LoginActivity : AppCompatActivity() {
                         Log.d(TAG, "sendPasswordResetEmail: success")
                         displayToast(getString(R.string.reset_password_instruction))
                     } else {
-                        Log.w(TAG, "sendPasswordResetEmail: failure", task.exception)
+                        Log.e(TAG, "sendPasswordResetEmail: failure", task.exception)
                         displayToast(getString(R.string.email_or_password_wrong))
                     }
                 }
@@ -86,7 +86,7 @@ class LoginActivity : AppCompatActivity() {
                     startActivity(intent)
                     finish()
                 } else {
-                    Log.w(TAG, "signInWithEmail: failure", task.exception)
+                    Log.e(TAG, "signInWithEmail: failure", task.exception)
                     displayToast(getString(R.string.email_or_password_wrong))
                 }
             }

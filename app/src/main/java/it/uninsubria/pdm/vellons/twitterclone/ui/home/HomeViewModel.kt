@@ -15,7 +15,6 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import it.uninsubria.pdm.vellons.twitterclone.tweet.Tweet
-import it.uninsubria.pdm.vellons.twitterclone.user.User
 import java.text.SimpleDateFormat
 
 class HomeViewModel : ViewModel() {
@@ -35,24 +34,19 @@ class HomeViewModel : ViewModel() {
             firestore.collection("tweets").whereEqualTo("visible", true)
                 .orderBy("postedAt", Query.Direction.DESCENDING).get()
                 .addOnSuccessListener { documents ->
-                    val user = User(
-                        id = "1",
-                        name = "Alex",
-                        username = "Vellons",
-                        userVerified = true,
-                    )
                     val listOfTweets: MutableList<Tweet> = mutableListOf()
                     val sdf = SimpleDateFormat("dd/MM/yyyy - HH:mm")
                     var position = 0
                     for (document in documents) {
                         val tweetPostDate = (document?.data?.get("postedAt") as Timestamp).toDate()
                         val item = Tweet(
-                            position = position,
                             id = document.id,
-                            user = user,
+                            userId = document.data["uid"].toString(),
+                            user = null, // TweetAdapter will add user info obj
                             displayDate = sdf.format(tweetPostDate),
                             text = document.data["tweet"].toString(),
                             source = document.data["sourcePath"].toString(),
+                            photoLink = document.data["photo"].toString(),
                             commentCount = 0,
                             retweetCount = 0,
                             likeCount = 0,
@@ -65,7 +59,7 @@ class HomeViewModel : ViewModel() {
                     Log.d(TAG, "Tweets list download completed")
                 }
                 .addOnFailureListener { exception ->
-                    Log.d(TAG, "Error getting documents: ", exception)
+                    Log.e(TAG, "Error downloading tweets list: ", exception)
                 }
         }
         return tweets

@@ -2,6 +2,9 @@ package it.uninsubria.pdm.vellons.twitterclone.tweet
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -10,18 +13,35 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.imageview.ShapeableImageView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storage
 import it.uninsubria.pdm.vellons.twitterclone.R
-import it.uninsubria.pdm.vellons.twitterclone.UserDetailActivity
 import it.uninsubria.pdm.vellons.twitterclone.user.User
+
 
 class TweetAdapter(initialTweetList: List<Tweet>, private val context: Context?) :
     RecyclerView.Adapter<TweetAdapter.TweetViewHolder>() {
+
+    private val TAG = "TweetAdapter"
     var tweetList: List<Tweet> = ArrayList<Tweet>()
+
+    private var auth: FirebaseAuth
+    private var firestore: FirebaseFirestore
+    private var storage: FirebaseStorage
 
     init {
         tweetList = initialTweetList
+        auth = Firebase.auth
+        firestore = Firebase.firestore
+        storage = Firebase.storage
     }
 
     class TweetViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -37,6 +57,7 @@ class TweetAdapter(initialTweetList: List<Tweet>, private val context: Context?)
         val commentCount: TextView = itemView.findViewById(R.id.textViewCommentCount)
         val retweetCount: TextView = itemView.findViewById(R.id.textViewRetweetCount)
         val likeCount: TextView = itemView.findViewById(R.id.textViewLikeCount)
+        val imageViewPost: ImageView = itemView.findViewById(R.id.imageViewPost)
         val commentImage: ImageButton = itemView.findViewById(R.id.imageButtonComment)
         val retweetImage: ImageButton = itemView.findViewById(R.id.imageButtonRetweet)
         val likeImage: ImageButton = itemView.findViewById(R.id.imageButtonLike)
@@ -46,16 +67,44 @@ class TweetAdapter(initialTweetList: List<Tweet>, private val context: Context?)
     override fun onBindViewHolder(holder: TweetViewHolder, position: Int) {
         // Binding xml with tweet object from list by position
         val currentItem = tweetList[position]
-        holder.name.text = currentItem.user.name
-        holder.username.text = ("@" + currentItem.user.username)
-        holder.verifiedBadge.visibility =
-            if (currentItem.user.userVerified) View.VISIBLE else View.GONE
+        if (currentItem.user == null) {  // Check if user is present. If not download from DB
+            // Get user photo if present
+            val uid = auth.currentUser?.uid
+            val userRef = firestore.collection("users").document(uid!!)
+            userRef.get().addOnSuccessListener { document ->
+                if (document != null) {
+                    currentItem.user = User(
+                        id = uid,
+                        name = document.getString("name") as String,
+                        username = document.getString("username") as String,
+                        userVerified = document.getBoolean("verified") == true,
+                        bio = document.getString("bio"),
+                        profilePhoto = document.getString("photo"),
+                    )
+                    updateUserInfo(holder, position)
+                } else {
+                    Log.e(TAG, "No such document. User do not exists in DB")
+                }
+            }.addOnFailureListener { exception ->
+                Log.e(TAG, "Failed to get profile info to display tweet", exception)
+            }
+        }
+
+        // Fill all TextView
+        updateUserInfo(holder, position)
         holder.date.text = currentItem.displayDate
         holder.text.text = currentItem.text
         holder.source.text = currentItem.source
-        if (currentItem.source !== "") {
+        if (currentItem.source != "" && currentItem.source != "null") { // Tweet source
             holder.source.visibility = View.VISIBLE
             holder.sourceLbl.visibility = View.VISIBLE
+            holder.source.setOnClickListener {
+                var url = holder.source.text
+                if (!url.startsWith("http://") && !url.startsWith("https://"))
+                    url = "https://$url"
+                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url as String?))
+                context?.startActivity(browserIntent)
+            }
         } else {
             holder.source.visibility = View.GONE
             holder.sourceLbl.visibility = View.GONE
@@ -69,6 +118,30 @@ class TweetAdapter(initialTweetList: List<Tweet>, private val context: Context?)
         } else {
             holder.likeImage.setImageResource(R.drawable.ic_like_outline_24)
             holder.likeImage.clearColorFilter()
+        }
+
+        if (currentItem.photoLink != "" && currentItem.photoLink != "null") { // Tweet photo
+            holder.imageViewPost.setImageResource(R.mipmap.ic_launcher_foreground) // Loader
+            holder.imageViewPost.visibility = View.VISIBLE
+            holder.imageViewPost.visibility = View.VISIBLE
+            val profilePath = currentItem.photoLink
+            if (profilePath != null) { // Download profile photo if present
+                val storageRef = storage.reference
+                val profilePhotoRef = storageRef.child(profilePath)
+
+                val ONE_MEGABYTE: Long = 1024 * 1024
+                // .getBytes take as a parameter the maximum download size accepted
+                profilePhotoRef.getBytes(8 * ONE_MEGABYTE)
+                    .addOnSuccessListener { bytes ->
+                        val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+                        holder.imageViewPost.setImageBitmap(bmp)
+                    }.addOnFailureListener {
+                        Log.e(TAG, "Failed to download tweet post image ", it)
+                    }
+            }
+        } else {
+            holder.imageViewPost.visibility = View.GONE
+            holder.imageViewPost.visibility = View.GONE
         }
 
         holder.commentImage.setOnClickListener {
@@ -95,16 +168,40 @@ class TweetAdapter(initialTweetList: List<Tweet>, private val context: Context?)
 
         // User detail activity
         holder.userImage.setOnClickListener {
-            openUserDetailsActivity(currentItem.user)
+//            openUserDetailsActivity(currentItem.user)
         }
         holder.name.setOnClickListener {
-            openUserDetailsActivity(currentItem.user)
+//            openUserDetailsActivity(currentItem.user)
         }
         holder.verifiedBadge.setOnClickListener {
-            openUserDetailsActivity(currentItem.user)
+//            openUserDetailsActivity(currentItem.user)
         }
         holder.username.setOnClickListener {
-            openUserDetailsActivity(currentItem.user)
+//            openUserDetailsActivity(currentItem.user)
+        }
+    }
+
+    private fun updateUserInfo(holder: TweetViewHolder, position: Int) {
+        val currentItem = tweetList[position]
+        holder.name.text = currentItem.user?.name
+        holder.username.text = ("@" + currentItem.user?.username)
+        holder.verifiedBadge.visibility =
+            if (currentItem.user?.userVerified == true) View.VISIBLE else View.GONE
+
+        val profilePath = currentItem.user?.profilePhoto
+        if (profilePath != null) { // Download profile photo if present
+            val storageRef = storage.reference
+            val profilePhotoRef = storageRef.child(profilePath)
+
+            val ONE_MEGABYTE: Long = 1024 * 1024
+            // .getBytes take as a parameter the maximum download size accepted
+            profilePhotoRef.getBytes(8 * ONE_MEGABYTE)
+                .addOnSuccessListener { bytes ->
+                    val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+                    holder.userImage.setImageBitmap(bmp)
+                }.addOnFailureListener {
+                    Log.e(TAG, "Failed to download user image ", it)
+                }
         }
     }
 
@@ -128,12 +225,12 @@ class TweetAdapter(initialTweetList: List<Tweet>, private val context: Context?)
         toast.show()
     }
 
-    private fun openUserDetailsActivity(user: User) {
-        val intent = Intent(context, UserDetailActivity::class.java)
-        intent.putExtra("id", user.id)
-        intent.putExtra("name", user.name)
-        intent.putExtra("username", user.username)
-        intent.putExtra("userVerified", user.userVerified)
-        context?.startActivity(intent)
-    }
+//    private fun openUserDetailsActivity(user: User) {
+//        val intent = Intent(context, UserDetailActivity::class.java)
+//        intent.putExtra("id", user.id)
+//        intent.putExtra("name", user.name)
+//        intent.putExtra("username", user.username)
+//        intent.putExtra("userVerified", user.userVerified)
+//        context?.startActivity(intent)
+//    }
 }

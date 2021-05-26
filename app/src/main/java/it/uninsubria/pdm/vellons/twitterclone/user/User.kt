@@ -5,4 +5,6 @@ data class User(
     val name: String,
     val username: String,
     val userVerified: Boolean = false,
+    val bio: String?,
+    val profilePhoto: String?,
 )

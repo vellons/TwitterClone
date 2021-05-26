@@ -77,14 +77,14 @@ class NewTweetActivity : AppCompatActivity() {
                             val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
                             imageViewProfileUserImage.setImageBitmap(bmp)
                         }.addOnFailureListener {
-                            Log.d(TAG, "Failed to download user image ", it)
+                            Log.e(TAG, "Failed to download user image ", it)
                         }
                 }
             } else {
-                Log.d(TAG, "No such document. User do not exists in DB")
+                Log.e(TAG, "No such document. User do not exists in DB")
             }
         }.addOnFailureListener { exception ->
-            Log.d(TAG, "Failed to get user info ", exception)
+            Log.e(TAG, "Failed to get user info ", exception)
         }
     }
 
@@ -236,7 +236,7 @@ class NewTweetActivity : AppCompatActivity() {
 
                 val uploadTask = tweetPhotoRef.putBytes(toUploadData) // Upload task
                 uploadTask.addOnFailureListener {
-                    Log.d(TAG, "Storage upload failed for " + tweetPhotoRef.path)
+                    Log.e(TAG, "Storage upload failed for " + tweetPhotoRef.path)
                     displayToast(R.string.upload_image_failed)
                 }.addOnSuccessListener { taskSnapshot ->
                     Log.d(

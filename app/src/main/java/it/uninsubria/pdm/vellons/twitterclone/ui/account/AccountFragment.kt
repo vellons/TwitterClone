@@ -104,7 +104,7 @@ class AccountFragment : Fragment() {
                                 val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
                                 imageViewProfileUserImage.setImageBitmap(bmp)
                             }.addOnFailureListener {
-                                Log.d(TAG, "Failed to download user image ", it)
+                                Log.e(TAG, "Failed to download user image ", it)
                             }
                     }
                 } else {
@@ -114,7 +114,7 @@ class AccountFragment : Fragment() {
                 textViewProfileName.text = ""
                 textViewProfileUsername.text = ""
                 textViewProfileBio.text = getString(R.string.check_internet_connection)
-                Log.d(TAG, "Failed to get user info ", exception)
+                Log.e(TAG, "Failed to get user info ", exception)
                 displayToast(R.string.check_internet_connection)
             }
         }
@@ -208,13 +208,13 @@ class AccountFragment : Fragment() {
                                         }
                                         .addOnFailureListener { exception ->
                                             displayToast(R.string.check_internet_connection)
-                                            Log.w(TAG, "Error updating user to DB", exception)
+                                            Log.e(TAG, "Error updating user to DB", exception)
                                         }
                                 }
                             }
                             .addOnFailureListener { exception ->
                                 displayToast(R.string.check_internet_connection)
-                                Log.w(TAG, "Error checking username", exception)
+                                Log.e(TAG, "Error checking username", exception)
                             }
 
                     } else {
@@ -319,7 +319,7 @@ class AccountFragment : Fragment() {
 
             val uploadTask = profilePhotoRef.putBytes(toUploadData) // Upload task
             uploadTask.addOnFailureListener {
-                Log.d(TAG, "Storage upload failed for " + profilePhotoRef.path)
+                Log.e(TAG, "Storage upload failed for " + profilePhotoRef.path)
                 displayToast(R.string.upload_image_failed)
             }.addOnSuccessListener { taskSnapshot ->
                 Log.d(
@@ -339,7 +339,7 @@ class AccountFragment : Fragment() {
                     }
                     .addOnFailureListener { exception ->
                         displayToast(R.string.check_internet_connection)
-                        Log.w(TAG, "Error updating user photo to DB", exception)
+                        Log.e(TAG, "Error updating user photo to DB", exception)
                     }
             }
         }

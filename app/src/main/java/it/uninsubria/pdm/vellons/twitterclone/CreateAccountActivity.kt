@@ -116,7 +116,7 @@ class CreateAccountActivity : AppCompatActivity() {
                 createAccount(email, pass)
             }
             .addOnFailureListener { exception ->
-                Log.w(TAG, "Error getting documents. Failed to check username", exception)
+                Log.e(TAG, "Error getting documents. Failed to check username", exception)
                 displayToast(getString(R.string.check_internet_connection))
             }
     }
@@ -133,11 +133,11 @@ class CreateAccountActivity : AppCompatActivity() {
                         Log.d(TAG, "Registered user: $uid. Saving in users collection")
                         saveUser(uid)
                     } else {
-                        Log.w(TAG, "Failed to get uid!")
+                        Log.e(TAG, "Failed to get uid!")
                     }
                 } else {
                     // If sign in fails, display a message to the user.
-                    Log.w(TAG, "createUserWithEmail: failure", task.exception)
+                    Log.e(TAG, "createUserWithEmail: failure", task.exception)
                     displayToast(
                         "Authentication failed: " + (task.exception?.message ?: " check logs")
                     )
@@ -166,7 +166,7 @@ class CreateAccountActivity : AppCompatActivity() {
                 finish()
             }
             .addOnFailureListener { exception ->
-                Log.w(TAG, "Error writing document. Failed to save user in collection", exception)
+                Log.e(TAG, "Error writing document. Failed to save user in collection", exception)
                 displayToast("Failed to save user to DB")
             }
     }
