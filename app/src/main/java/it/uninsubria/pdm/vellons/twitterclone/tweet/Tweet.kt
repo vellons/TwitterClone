@@ -10,8 +10,8 @@ data class Tweet(
     val text: String = "",
     val source: String = "",
     val photoLink: String? = null,
-    var commentCount: Number = 0,
-    var retweetCount: Number = 0,
-    var likeCount: Number = 0,
+    var commentCount: Int = 0,
+    var retweetCount: Int = 0,
+    var likeCount: Int = 0,
     var hasUserLike: Boolean = false,
 )

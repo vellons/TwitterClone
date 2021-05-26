@@ -282,7 +282,7 @@ class NewTweetActivity : AppCompatActivity() {
                 finish()
             }
             .addOnFailureListener { exception ->
-                Log.w(
+                Log.e(
                     TAG,
                     "Error writing document. Failed to save tweet in collection",
                     exception

@@ -13,11 +13,11 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -153,16 +153,43 @@ class TweetAdapter(initialTweetList: List<Tweet>, private val context: Context?)
 
         // Like/Remove like
         holder.likeImage.setOnClickListener {
+            val tweetRef = firestore.collection("tweets").document(currentItem.id)
             if (!currentItem.hasUserLike) {
                 currentItem.hasUserLike = true
+                currentItem.likeCount = currentItem.likeCount + 1
                 holder.likeCount.text = ((holder.likeCount.text as String).toInt() + 1).toString()
                 holder.likeImage.setImageResource(R.drawable.ic_like_full_24)
                 holder.likeImage.setColorFilter(R.color.like_color)
+
+                // Add like
+                val tweetUpdate = hashMapOf(
+                    "likes" to FieldValue.arrayUnion(currentItem.userId),
+                )
+                tweetRef.update(tweetUpdate as Map<String, Any>)
+                    .addOnSuccessListener {
+                        Log.d(TAG, "Like added for tweet ${currentItem.id}")
+                    }
+                    .addOnFailureListener {
+                        Log.e(TAG, "Failed to add like for tweet ${currentItem.id}")
+                    }
             } else {
                 currentItem.hasUserLike = false
+                currentItem.likeCount = currentItem.likeCount - 1
                 holder.likeCount.text = ((holder.likeCount.text as String).toInt() - 1).toString()
                 holder.likeImage.setImageResource(R.drawable.ic_like_outline_24)
                 holder.likeImage.clearColorFilter()
+
+                // Remove like
+                val tweetUpdate = hashMapOf(
+                    "likes" to FieldValue.arrayRemove(currentItem.userId),
+                )
+                tweetRef.update(tweetUpdate as Map<String, Any>)
+                    .addOnSuccessListener {
+                        Log.d(TAG, "Like removed for tweet ${currentItem.id}")
+                    }
+                    .addOnFailureListener {
+                        Log.e(TAG, "Failed to remove like for tweet ${currentItem.id}")
+                    }
             }
         }
 

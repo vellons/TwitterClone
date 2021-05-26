@@ -12,8 +12,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.ktx.storage
 import it.uninsubria.pdm.vellons.twitterclone.tweet.Tweet
 import java.text.SimpleDateFormat
 
@@ -24,7 +22,6 @@ class HomeViewModel : ViewModel() {
     private val TAG = "HomeViewModel"
     private var auth: FirebaseAuth = Firebase.auth
     private var firestore: FirebaseFirestore = Firebase.firestore
-    private var storage: FirebaseStorage = Firebase.storage
 
     private var tweets: MutableLiveData<List<Tweet>> = MutableLiveData()
 
@@ -49,8 +46,8 @@ class HomeViewModel : ViewModel() {
                             photoLink = document.data["photo"].toString(),
                             commentCount = 0,
                             retweetCount = 0,
-                            likeCount = 0,
-                            hasUserLike = false
+                            likeCount = (document.data["likes"] as List<*>).size,
+                            hasUserLike = (document.data["likes"] as List<*>).contains(auth.currentUser?.uid)
                         )
                         position += 1
                         listOfTweets.add(item)
