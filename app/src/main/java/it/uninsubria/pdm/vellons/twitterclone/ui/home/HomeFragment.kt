@@ -24,8 +24,6 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         var tweetList: List<Tweet> = ArrayList<Tweet>()
-        // tweetList = generateSampleList(150) // Used only for tests
-//        tweetList = generateLoadingList(8) // Used only for padding
 
         val root = inflater.inflate(R.layout.fragment_home, container, false)
         val recyclerView: RecyclerView = root.findViewById(R.id.recycler_view_home_tweet)
@@ -50,55 +48,4 @@ class HomeFragment : Fragment() {
 
         return root
     }
-
-//    private fun generateLoadingList(size: Int): List<Tweet> {
-//        val list = ArrayList<Tweet>()
-//        for (i in 0 until size) {
-//            val item = Tweet(
-//                id = i.toString(),
-//                userId = "",
-//                user = null,
-//                displayDate = "",
-//                text = "...",
-//                source = "",
-//                photoLink = null,
-//                commentCount = 0,
-//                retweetCount = 0,
-//                likeCount = 0,
-//                hasUserLike = false
-//            )
-//            list += item
-//        }
-//        return list
-//    }
-//
-//    // Used only for tests
-//    private fun generateSampleList(size: Int): List<Tweet> {
-//        val list = ArrayList<Tweet>()
-//        for (i in 0 until size) {
-//            val user = User(
-//                id = "$i",
-//                name = "Name $i",
-//                username = "user$i",
-//                userVerified = i % 5 == 0,
-//                bio = null,
-//                profilePhoto = null
-//            )
-//            val item = Tweet(
-//                id = i.toString(),
-//                userId = "",
-//                user = user,
-//                displayDate = (i + 1).toString() + " hour ago",
-//                text = "Tweet $i. Ciao!",
-//                source = if (i % 4 == 0) "https://example.com/$i" else "",
-//                photoLink = null,
-//                commentCount = size - i,
-//                retweetCount = 20 + i,
-//                likeCount = if (i % 3 == 0) i + 3 else 0,
-//                hasUserLike = i % 6 == 0
-//            )
-//            list += item
-//        }
-//        return list
-//    }
 }

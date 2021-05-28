@@ -212,6 +212,7 @@ class TweetAdapter(initialTweetList: List<Tweet>, private val context: Context?)
         val currentItem = tweetList[position]
         holder.name.text = currentItem.user?.name
         holder.username.text = ("@" + currentItem.user?.username)
+        holder.username.visibility = View.GONE
         holder.verifiedBadge.visibility =
             if (currentItem.user?.userVerified == true) View.VISIBLE else View.GONE
 

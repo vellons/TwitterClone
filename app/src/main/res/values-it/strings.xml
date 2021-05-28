@@ -43,7 +43,7 @@
     <string name="insert_a_valid_link">Inserisci un link valido</string>
     <string name="take_picture">Scatta una foto ora</string>
     <string name="take_photo_from_gallery">Scegli una foto dalla galleria</string>
-    <string name="add_source_for_this_tweet">Aggiungi una fonte per questo tweet</string>
+    <string name="add_source_for_this_tweet">Aggiungi un link</string>
     <string name="fail_to_open_camera">Non è stato possibili aprire la camera</string>
     <string name="check_internet_connection">Perfavore, controlla la tua connesione ad internet</string>
     <string name="login">Login</string>
@@ -54,4 +54,5 @@
     <string name="upload_image_failed">Caricamento immagine fallito, riprova</string>
     <string name="upload_image_succes">Caricamento immagine completato</string>
     <string name="tweet_posted">Tweet postato!!!</string>
+    <string name="today">Oggi</string>
 </resources>
