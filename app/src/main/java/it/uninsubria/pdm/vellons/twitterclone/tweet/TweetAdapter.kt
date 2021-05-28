@@ -24,6 +24,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import it.uninsubria.pdm.vellons.twitterclone.R
+import it.uninsubria.pdm.vellons.twitterclone.UserDetailActivity
 import it.uninsubria.pdm.vellons.twitterclone.user.User
 
 
@@ -195,16 +196,16 @@ class TweetAdapter(initialTweetList: List<Tweet>, private val context: Context?)
 
         // User detail activity
         holder.userImage.setOnClickListener {
-//            openUserDetailsActivity(currentItem.user)
+            openUserDetailsActivity(currentItem.user)
         }
         holder.name.setOnClickListener {
-//            openUserDetailsActivity(currentItem.user)
+            openUserDetailsActivity(currentItem.user)
         }
         holder.verifiedBadge.setOnClickListener {
-//            openUserDetailsActivity(currentItem.user)
+            openUserDetailsActivity(currentItem.user)
         }
         holder.username.setOnClickListener {
-//            openUserDetailsActivity(currentItem.user)
+            openUserDetailsActivity(currentItem.user)
         }
     }
 
@@ -253,12 +254,15 @@ class TweetAdapter(initialTweetList: List<Tweet>, private val context: Context?)
         toast.show()
     }
 
-//    private fun openUserDetailsActivity(user: User) {
-//        val intent = Intent(context, UserDetailActivity::class.java)
-//        intent.putExtra("id", user.id)
-//        intent.putExtra("name", user.name)
-//        intent.putExtra("username", user.username)
-//        intent.putExtra("userVerified", user.userVerified)
-//        context?.startActivity(intent)
-//    }
+    private fun openUserDetailsActivity(user: User?) {
+        if (user == null) return
+        val intent = Intent(context, UserDetailActivity::class.java)
+        intent.putExtra("id", user.id)
+        intent.putExtra("name", user.name)
+        intent.putExtra("username", user.username)
+        intent.putExtra("userVerified", user.userVerified)
+        intent.putExtra("bio", user.bio)
+        intent.putExtra("profilePhoto", user.profilePhoto)
+        context?.startActivity(intent)
+    }
 }

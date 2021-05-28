@@ -32,7 +32,9 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     fun getTweets(): LiveData<List<Tweet>> {
         if (tweets.value == null) {
             firestore.collection("tweets").whereEqualTo("visible", true)
-                .orderBy("postedAt", Query.Direction.DESCENDING).get()
+                .orderBy("postedAt", Query.Direction.DESCENDING)
+                .limit(300)
+                .get()
                 .addOnSuccessListener { documents ->
                     val listOfTweets: MutableList<Tweet> = mutableListOf()
                     for (document in documents) {
