@@ -148,7 +148,7 @@ class CreateAccountActivity : AppCompatActivity() {
     private fun saveUser(uid: String) {
         // Create new user record in 'users' collection
         val user = hashMapOf(
-            "username" to user,
+            "username" to user.toLowerCase(Locale.ROOT),
             "verified" to false,
             "name" to name,
             "photo" to null,

@@ -70,7 +70,7 @@ class TweetAdapter(initialTweetList: List<Tweet>, private val context: Context?)
         val currentItem = tweetList[position]
         if (currentItem.user == null) {  // Check if user is present. If not download from DB
             // Get user photo if present
-            val uid = auth.currentUser?.uid
+            val uid = currentItem.userId
             val userRef = firestore.collection("users").document(uid!!)
             userRef.get().addOnSuccessListener { document ->
                 if (document != null) {
@@ -164,7 +164,7 @@ class TweetAdapter(initialTweetList: List<Tweet>, private val context: Context?)
 
                 // Add like
                 val tweetUpdate = hashMapOf(
-                    "likes" to FieldValue.arrayUnion(currentItem.userId),
+                    "likes" to FieldValue.arrayUnion(auth.currentUser?.uid),
                 )
                 tweetRef.update(tweetUpdate as Map<String, Any>)
                     .addOnSuccessListener {
@@ -182,7 +182,7 @@ class TweetAdapter(initialTweetList: List<Tweet>, private val context: Context?)
 
                 // Remove like
                 val tweetUpdate = hashMapOf(
-                    "likes" to FieldValue.arrayRemove(currentItem.userId),
+                    "likes" to FieldValue.arrayRemove(auth.currentUser?.uid),
                 )
                 tweetRef.update(tweetUpdate as Map<String, Any>)
                     .addOnSuccessListener {
@@ -217,6 +217,7 @@ class TweetAdapter(initialTweetList: List<Tweet>, private val context: Context?)
         holder.verifiedBadge.visibility =
             if (currentItem.user?.userVerified == true) View.VISIBLE else View.GONE
 
+        holder.userImage.setImageResource(R.mipmap.ic_default_user_photo) // Loader
         val profilePath = currentItem.user?.profilePhoto
         if (profilePath != null) { // Download profile photo if present
             val storageRef = storage.reference
@@ -230,7 +231,10 @@ class TweetAdapter(initialTweetList: List<Tweet>, private val context: Context?)
                     holder.userImage.setImageBitmap(bmp)
                 }.addOnFailureListener {
                     Log.e(TAG, "Failed to download user image ", it)
+                    holder.userImage.setImageResource(R.mipmap.ic_default_user_photo) // Default
                 }
+        } else {
+            holder.userImage.setImageResource(R.mipmap.ic_default_user_photo) // Default
         }
     }
 

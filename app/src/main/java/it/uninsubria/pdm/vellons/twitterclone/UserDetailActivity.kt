@@ -98,10 +98,8 @@ class UserDetailActivity : AppCompatActivity() {
                     val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
                     profileImageImage.setImageBitmap(bmp)
                 }.addOnFailureListener {
-                    Log.e(TAG, "Failed to download user image ", it)
+                    Log.e(TAG, "profilePhoto")
                 }
-        } else {
-            Log.e(TAG, "No such document. User do not exists in DB")
         }
     }
 
