@@ -5,9 +5,11 @@ import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.text.format.DateUtils
 import android.util.Log
+import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -98,7 +100,7 @@ class UserDetailActivity : AppCompatActivity() {
                     val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
                     profileImageImage.setImageBitmap(bmp)
                 }.addOnFailureListener {
-                    Log.e(TAG, "profilePhoto")
+                    Log.e(TAG, "Failed to get user profile photo")
                 }
         }
     }
@@ -117,6 +119,9 @@ class UserDetailActivity : AppCompatActivity() {
                 .get()
                 .addOnSuccessListener { documents ->
                     val listOfTweets: MutableList<Tweet> = mutableListOf()
+                    if (documents.size() == 0) {
+                        displayToast(getString(R.string.no_tweets))
+                    }
                     for (document in documents) {
                         val tweetPostTimestamp =
                             (document?.data?.get("postedAt") as Timestamp).seconds * 1000
@@ -155,5 +160,15 @@ class UserDetailActivity : AppCompatActivity() {
                 }
         }
         return tweets
+    }
+
+    private fun displayToast(string: String) {
+        val toast = Toast.makeText(
+            this,
+            string,
+            Toast.LENGTH_SHORT
+        )
+        toast.setGravity(Gravity.CENTER, 0, 0)
+        toast.show()
     }
 }

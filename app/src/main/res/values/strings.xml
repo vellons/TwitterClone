@@ -55,4 +55,6 @@
     <string name="upload_image_succes">Image upload confirmed</string>
     <string name="tweet_posted">Tweet posted!!!</string>
     <string name="today">Today</string>
+    <string name="my_tweets">My tweets</string>
+    <string name="no_tweets">No tweets here yet…</string>
 </resources>

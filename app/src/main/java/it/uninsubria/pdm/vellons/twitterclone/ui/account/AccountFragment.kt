@@ -25,6 +25,8 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import it.uninsubria.pdm.vellons.twitterclone.MainActivity
 import it.uninsubria.pdm.vellons.twitterclone.R
+import it.uninsubria.pdm.vellons.twitterclone.UserDetailActivity
+import it.uninsubria.pdm.vellons.twitterclone.user.User
 import java.io.ByteArrayOutputStream
 import java.util.*
 import java.util.regex.Pattern
@@ -36,7 +38,7 @@ class AccountFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
     private lateinit var storage: FirebaseStorage
-    private var isUserVerified: Boolean = false
+    private var loggedUser: User? = null
 
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
@@ -56,6 +58,7 @@ class AccountFragment : Fragment() {
         val editTextProfileName: TextView = root.findViewById(R.id.editTextProfileName)
         val editTextProfileUsername: TextView = root.findViewById(R.id.editTextProfileUsername)
         val editTextProfileBio: TextView = root.findViewById(R.id.editTextProfileBio)
+        val buttonMyTweets: Button = root.findViewById(R.id.buttonMyTweets)
         val buttonEditAccount: Button = root.findViewById(R.id.buttonEditAccount)
         val buttonEditPhoto: Button = root.findViewById(R.id.buttonEditPhoto)
         val buttonLogout: Button = root.findViewById(R.id.buttonLogout)
@@ -82,12 +85,19 @@ class AccountFragment : Fragment() {
             userRef.get(firestoreSource).addOnSuccessListener { document ->
                 Log.d(TAG, "Current user uid: $uid Data: " + document.data)
                 if (document != null) {
-                    textViewProfileName.text = document.getString("name")
-                    textViewProfileUsername.text = "@" + document.getString("username")
-                    textViewProfileBio.text = document.getString("bio")
+                    loggedUser = User(
+                        id = uid,
+                        name = document.getString("name") as String,
+                        username = document.getString("username") as String,
+                        userVerified = document.getBoolean("verified") == true,
+                        bio = document.getString("bio"),
+                        profilePhoto = document.getString("photo"),
+                    )
+                    textViewProfileName.text = loggedUser!!.name
+                    textViewProfileUsername.text = "@" + loggedUser!!.username
+                    textViewProfileBio.text = loggedUser!!.bio
 
-                    isUserVerified = document.getBoolean("verified") == true
-                    if (isUserVerified) {
+                    if (loggedUser!!.userVerified) {
                         imageViewBadge.visibility = View.VISIBLE // Only if verified user
                     }
 
@@ -201,7 +211,7 @@ class AccountFragment : Fragment() {
                                             textViewProfileBio.visibility = View.VISIBLE
                                             buttonEditAccount.text =
                                                 getString(R.string.edit_account)
-                                            if (isUserVerified) {
+                                            if (loggedUser?.userVerified == true) {
                                                 imageViewBadge.visibility =
                                                     View.VISIBLE // Only if verified user
                                             }
@@ -227,7 +237,7 @@ class AccountFragment : Fragment() {
                         textViewProfileUsername.visibility = View.VISIBLE
                         textViewProfileBio.visibility = View.VISIBLE
                         buttonEditAccount.text = getString(R.string.edit_account)
-                        if (isUserVerified) {
+                        if (loggedUser?.userVerified == true) {
                             imageViewBadge.visibility = View.VISIBLE // Only if verified user
                         }
                     }
@@ -251,6 +261,19 @@ class AccountFragment : Fragment() {
         buttonLogout.setOnLongClickListener {
             displayToast(R.string.app_info_message)
             return@setOnLongClickListener true
+        }
+
+        buttonMyTweets.setOnClickListener {
+            if (loggedUser != null) {
+                val intent = Intent(context, UserDetailActivity::class.java)
+                intent.putExtra("id", loggedUser!!.id)
+                intent.putExtra("name", loggedUser!!.name)
+                intent.putExtra("username", loggedUser!!.username)
+                intent.putExtra("userVerified", loggedUser!!.userVerified)
+                intent.putExtra("bio", loggedUser!!.bio)
+                intent.putExtra("profilePhoto", loggedUser!!.profilePhoto)
+                context?.startActivity(intent)
+            }
         }
 
         return root
