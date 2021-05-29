@@ -57,4 +57,5 @@
     <string name="today">Today</string>
     <string name="my_tweets">My tweets</string>
     <string name="no_tweets">No tweets here yet…</string>
+    <string name="search">Search</string>
 </resources>

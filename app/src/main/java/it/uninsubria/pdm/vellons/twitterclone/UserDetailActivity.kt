@@ -112,7 +112,8 @@ class UserDetailActivity : AppCompatActivity() {
     @SuppressLint("SimpleDateFormat")
     fun getUserTweets(uid: String): LiveData<List<Tweet>> {
         if (tweets.value == null) {
-            firestore.collection("tweets").whereEqualTo("visible", true)
+            firestore.collection("tweets")
+                .whereEqualTo("visible", true)
                 .whereEqualTo("uid", uid)  // Filter by user
                 .orderBy("postedAt", Query.Direction.DESCENDING)
                 .limit(1000)

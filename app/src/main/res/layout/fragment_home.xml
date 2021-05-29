@@ -6,10 +6,63 @@
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeFragment">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/appIcon"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="0.15"
+            android:contentDescription="@string/app_name"
+            android:padding="1dp"
+            android:scaleType="fitStart"
+            app:srcCompat="@mipmap/ic_launcher_foreground" />
+
+        <EditText
+            android:id="@+id/editTextSearch"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="12dp"
+            android:layout_weight="0.7"
+            android:autofillHints="text"
+            android:background="@null"
+            android:ems="10"
+            android:hint="@string/search"
+            android:inputType="textPersonName"
+            app:layout_constraintStart_toEndOf="@+id/appIcon" />
+
+        <ImageButton
+            android:id="@+id/imageButtonSearchIcon"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="12dp"
+            android:layout_weight="0.15"
+            android:background="@drawable/my_button_transparent"
+            android:contentDescription="@string/app_name"
+            android:padding="8dp"
+            app:srcCompat="@drawable/ic_search_outline_24"
+            app:tint="@color/primary" />
+
+    </LinearLayout>
+
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="54dp">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_home_tweet"
@@ -20,6 +73,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/appIcon"
             app:layout_constraintTop_toTopOf="parent"
             tools:listitem="@layout/tweet" />
 

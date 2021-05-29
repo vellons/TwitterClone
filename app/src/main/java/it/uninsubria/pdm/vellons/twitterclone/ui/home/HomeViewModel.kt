@@ -27,11 +27,13 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private var firestore: FirebaseFirestore = Firebase.firestore
 
     private var tweets: MutableLiveData<List<Tweet>> = MutableLiveData()
+    private var filteredTweets: MutableLiveData<List<Tweet>> = MutableLiveData()
 
     @SuppressLint("SimpleDateFormat")
     fun getTweets(): LiveData<List<Tweet>> {
         if (tweets.value == null) {
-            firestore.collection("tweets").whereEqualTo("visible", true)
+            firestore.collection("tweets")
+                .whereEqualTo("visible", true)
                 .orderBy("postedAt", Query.Direction.DESCENDING)
                 .limit(300)
                 .get()
@@ -79,6 +81,22 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         tweets.value = null
         getTweets()
         return tweets
+    }
+
+    fun searchInTweets(filter: String): LiveData<List<Tweet>> {
+        filteredTweets.value = null
+        if (tweets.value != null && filter != "") {
+            val listOfTweets: MutableList<Tweet> = mutableListOf()
+            for (tweet in tweets.value!!) {
+                if (tweet.text.contains(filter, ignoreCase = true)) {
+                    listOfTweets.add(tweet)
+                }
+            }
+            filteredTweets.postValue(listOfTweets)
+            return filteredTweets
+        } else {
+            return tweets
+        }
     }
 
     private fun getString(string: Int): String {
