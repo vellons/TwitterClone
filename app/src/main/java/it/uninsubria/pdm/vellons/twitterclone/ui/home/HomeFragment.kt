@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import it.uninsubria.pdm.vellons.twitterclone.R
 import it.uninsubria.pdm.vellons.twitterclone.tweet.Tweet
 import it.uninsubria.pdm.vellons.twitterclone.tweet.TweetAdapter
@@ -45,6 +46,20 @@ class HomeFragment : Fragment() {
                 mTweetAdapter.tweetList = tweetList // Update adapter list
                 mTweetAdapter.notifyDataSetChanged()
             })
+
+
+        // Refresh action
+        val swipeRefresh: SwipeRefreshLayout = root.findViewById(R.id.swipeRefresh)
+        swipeRefresh.setColorSchemeColors(resources.getColor(R.color.primary))
+        swipeRefresh.setOnRefreshListener {
+            homeViewModel.getTweets()
+                .observe(viewLifecycleOwner, Observer { it -> // Observe changes and notify
+                    tweetList = it
+                    mTweetAdapter.tweetList = tweetList // Update adapter list
+                    mTweetAdapter.notifyDataSetChanged()
+                    swipeRefresh.isRefreshing = false // Stop the loading spinner
+                })
+        }
 
         return root
     }
