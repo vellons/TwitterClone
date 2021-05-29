@@ -75,6 +75,12 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         return tweets
     }
 
+    fun reloadTweets(): LiveData<List<Tweet>> {
+        tweets.value = null
+        getTweets()
+        return tweets
+    }
+
     private fun getString(string: Int): String {
         // https://stackoverflow.com/questions/47628646/how-should-i-get-resourcesr-string-in-viewmodel-in-android-mvvm-and-databindi
         return getApplication<Application>().resources.getString(string)

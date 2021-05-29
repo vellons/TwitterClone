@@ -122,7 +122,7 @@
         android:autofillHints="t"
         android:hint="@string/insert_small_bio"
         android:inputType="textNoSuggestions"
-        android:maxLength="256"
+        android:maxLength="50"
         android:textSize="18sp"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"

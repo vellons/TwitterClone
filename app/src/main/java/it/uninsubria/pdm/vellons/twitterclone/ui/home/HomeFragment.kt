@@ -42,9 +42,11 @@ class HomeFragment : Fragment() {
         homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         homeViewModel.getTweets()
             .observe(viewLifecycleOwner, Observer { it -> // Observe changes and notify
-                tweetList = it
-                mTweetAdapter.tweetList = tweetList // Update adapter list
-                mTweetAdapter.notifyDataSetChanged()
+                if (it != null) {
+                    tweetList = it
+                    mTweetAdapter.tweetList = tweetList // Update adapter list
+                    mTweetAdapter.notifyDataSetChanged()
+                }
             })
 
 
@@ -52,12 +54,14 @@ class HomeFragment : Fragment() {
         val swipeRefresh: SwipeRefreshLayout = root.findViewById(R.id.swipeRefresh)
         swipeRefresh.setColorSchemeColors(resources.getColor(R.color.primary))
         swipeRefresh.setOnRefreshListener {
-            homeViewModel.getTweets()
+            homeViewModel.reloadTweets()
                 .observe(viewLifecycleOwner, Observer { it -> // Observe changes and notify
-                    tweetList = it
-                    mTweetAdapter.tweetList = tweetList // Update adapter list
-                    mTweetAdapter.notifyDataSetChanged()
-                    swipeRefresh.isRefreshing = false // Stop the loading spinner
+                    if (it != null) {
+                        tweetList = it
+                        mTweetAdapter.tweetList = tweetList // Update adapter list
+                        mTweetAdapter.notifyDataSetChanged()
+                        swipeRefresh.isRefreshing = false // Stop the loading spinner
+                    }
                 })
         }
 
