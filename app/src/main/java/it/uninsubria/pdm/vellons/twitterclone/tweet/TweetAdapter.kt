@@ -68,6 +68,7 @@ class TweetAdapter(initialTweetList: List<Tweet>, private val context: Context?)
     override fun onBindViewHolder(holder: TweetViewHolder, position: Int) {
         // Binding xml with tweet object from list by position
         val currentItem = tweetList[position]
+        holder.userImage.setImageResource(R.mipmap.ic_default_user_photo) // Default user image
         if (currentItem.user == null) {  // Check if user is present. If not download from DB
             // Get user photo if present
             val uid = currentItem.userId
