@@ -5,9 +5,6 @@ Tutti gli utenti registrati possono condividere post di massimo 500 caratteri, c
 L'utente, quando creerà un nuovo post, potrà opzionalmente inserire un link della fonte, 
 nel caso voglia commentare delle informazioni di carattere pubblico.
 
-![APK release link](https://github.com/vellons/TwitterClone/releases/download/v1.4/TwitterClone-debug-1.4.apk)
-
-
 ![Poster 1](app/src/main/poster1.png)
 
 
@@ -16,11 +13,11 @@ L'architettura di questa applicazione si basa su Google Firebase.
 - Firebase Auth: gestione utenti
 - Firebase Firestore database: users collection e tweets collection
 - Firebase Storage: per memorizzare foto profilo e media dei tweet
-- Firebase CrashAnalytics: per raccolta errori runtime
+- Firebase Crashlytics: per raccolta errori runtime
 - Firebase Analytics: per monitoraggio utenti
 
 
-# Funzionalità
+## Funzionalità
 - Tema applicazione dinamico (bianco o nero)
 - Registrazione con email e password
 - Login con email e password
@@ -33,6 +30,7 @@ L'architettura di questa applicazione si basa su Google Firebase.
 - Possibilità di mettere e togliere like ai tweet
 - Creazione di un tweet con solo testo
 - Creazione di un tweet con testo e immagine (dalla galleria o scattata al momento)
+- Barra di ricerca per filtrare il testo dei tweet
 - Scroll verso il basso per caricare i nuovi tweet
 - Lingue supportate: italiano e inglese (dinamicamente)
 
