@@ -1,41 +1,37 @@
 # Talks - Twitter clone
 
-Un social network simile a Twitter. 
-Tutti gli utenti registrati possono condividere post di massimo 500 caratteri, con eventualmente una foto.
-L'utente, quando creerà un nuovo post, potrà opzionalmente inserire un link della fonte, 
-nel caso voglia commentare delle informazioni di carattere pubblico.
+A social network similar to Twitter.
+Made with Kotlin and Firebase.
+All registered users can share posts of up to 500 characters, with the possibly to add a photo.
 
 ![Poster 1](app/src/main/poster1.png)
 
 
 ## Backend
-L'architettura di questa applicazione si basa su Google Firebase.
-- Firebase Auth: gestione utenti
-- Firebase Firestore database: users collection e tweets collection
-- Firebase Storage: per memorizzare foto profilo e media dei tweet
-- Firebase Crashlytics: per raccolta errori runtime
-- Firebase Analytics: per monitoraggio utenti
+The architecture of this application is based on Google Firebase.
+- Firebase Auth: user management
+- Firebase Firestore database: users collection and tweets collection
+- Firebase Storage: to store profile photos and media of tweets
+- Firebase Crashlytics: for runtime error collection
+- Firebase Analytics: for user monitoring
 
 
-## Funzionalità
-- Tema applicazione dinamico (bianco o nero)
-- Registrazione con email e password
-- Login con email e password
-- Reset password con email
+## Functionality
+- Dynamic application theme (dark or light)
+- Registration with email and password
+- Login with email and password
+- Password reset with email
 - Logout
-- Modifica informazioni account: nome, username, bio del profilo, immagine di profilo
-- Badge di account verificato per gli utenti idonei
-- Visualizzazione di tutti i tweet nella bacheca
-- Visualizzazione dei tweet di un utente (cliccando sulla sua foto) (Pagina dettaglio utente)
-- Possibilità di mettere e togliere like ai tweet
-- Creazione di un tweet con solo testo
-- Creazione di un tweet con testo e immagine (dalla galleria o scattata al momento)
-- Barra di ricerca per filtrare il testo dei tweet
-- Scroll verso il basso per caricare i nuovi tweet
-- Lingue supportate: italiano e inglese (dinamicamente)
+- Edit account information: name, username, profile bio, profile picture
+- Verified account badge for eligible users
+- View all tweets on the dashboard
+- Viewing a user's tweets (by clicking on their photo) (User detail page)
+- Ability to like and unlike tweets
+- Create a text-only tweet
+- Creation of a tweet with text and image (from the gallery or taken at the moment)
+- Search bar to filter the tweet text
+- Scroll down to refresh tweet list
+- Supported languages: Italian and English (dynamically)
 
 
 ![Poster 2](app/src/main/poster2.png)
-
-
-Copyright © 2021 Alex Vellone
